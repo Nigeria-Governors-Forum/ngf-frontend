@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import { Metadata } from "next";
 import State from "naija-state-local-government";
+import 'leaflet/dist/leaflet.css';
 
 import LagosSVG from "../assets/map/lag.svg";
 import KanoSVG from "../assets/map/lag.svg";

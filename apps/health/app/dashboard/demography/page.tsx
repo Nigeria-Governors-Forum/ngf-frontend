@@ -4,6 +4,7 @@ import React from "react";
 import DemographyCard from "@repo/ui/demographyCard";
 import LgaSummaryTable, { LgaRow } from "@repo/ui/lgaSummaryTable";
 import { FaMoneyCheck } from "react-icons/fa";
+import MapView from "../../components/MapWrapper";
 
 interface DemograpyPageProps {
   state?: string;
@@ -142,7 +143,8 @@ const DemographyPage: React.FC<DemograpyPageProps> = ({
 
       {/* Center: single card */}
       <div className="flex-1 flex items-start">
-        <DemographyCard title="Year created" subtitle="1979" />
+        <MapView  mapClassName={`h-96 w-full rounded-xl`}/>
+
       </div>
 
       {/* Right: single card */}
