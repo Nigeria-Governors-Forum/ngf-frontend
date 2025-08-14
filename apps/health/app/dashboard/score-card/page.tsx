@@ -216,7 +216,7 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ state = "Akwa Ibom" }) => {
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-hidden">
         {/* Single State View */}
         <ScorecardTable
           mode="single"

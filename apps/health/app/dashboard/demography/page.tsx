@@ -6,11 +6,11 @@ import LgaSummaryTable, { LgaRow } from "@repo/ui/lgaSummaryTable";
 import { FaMoneyCheck } from "react-icons/fa";
 import MapView from "../../components/MapWrapper";
 
-interface DemograpyPageProps {
+interface DemographyPageProps {
   state?: string;
 }
 
-const DemographyPage: React.FC<DemograpyPageProps> = ({
+const DemographyPage: React.FC<DemographyPageProps> = ({
   state = "Akwa Ibom",
 }) => {
   const data: LgaRow[] = [
@@ -122,9 +122,9 @@ const DemographyPage: React.FC<DemograpyPageProps> = ({
     // ...
   ];
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col gap-6">
       {/* Left: takes 2x space */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <DemographyCard title="Year created" subtitle="1979" />
         <DemographyCard title="Total population" subtitle="1979" />
         <DemographyCard title="Land mass" subtitle="1979" />
@@ -142,13 +142,8 @@ const DemographyPage: React.FC<DemograpyPageProps> = ({
       </div>
 
       {/* Center: single card */}
-      <div className="flex-1 flex items-start">
-        <MapView  mapClassName={`h-96 w-full rounded-xl`}/>
-
-      </div>
-
-      {/* Right: single card */}
-      <div className="flex-1 flex items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <MapView mapClassName={`h-96 w-full rounded-xl shadow`} showCard={true}/>
         <LgaSummaryTable title="LGA Summary" data={data} />
       </div>
     </div>

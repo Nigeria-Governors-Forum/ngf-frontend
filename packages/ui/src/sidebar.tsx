@@ -43,13 +43,19 @@ export const navItem: NavItem[] = [
     roles: ["user", "acct", "audit", "admin"],
   },
   {
-    href: "/dashboard",
+    href: "/dashboard/health-facilities",
     icon: <FaMoneyCheck />,
     label: "Health Facilities",
     roles: ["user", "acct", "audit", "admin"],
   },
   {
-    href: "/dashboard",
+    href: "/dashboard/zonal-health-facilities",
+    icon: <FaMoneyCheck />,
+    label: "Zonal Health Facilities",
+    roles: ["user", "acct", "audit", "admin"],
+  },
+  {
+    href: "/dashboard/human-resource",
     icon: <FaMoneyCheck />,
     label: "Human Resource",
     roles: ["user", "acct", "audit", "admin"],
