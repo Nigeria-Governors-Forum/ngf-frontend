@@ -1,153 +1,83 @@
-import HorizontalStateBarChart from "@repo/ui/amountBar";
-import ComparisonBarChart from "@repo/ui/barchart";
-import RechartMetricCard from "@repo/ui/rechartMetricCard";
+import DemographyCard from "@repo/ui/demographyCard";
+import { FaMapMarked, FaMoneyCheck, FaPersonBooth } from "react-icons/fa";
+import DonutChart from "../components/DonoughtChart";
+import MultiLineChart from "../components/LineChart";
+import MapView from "../components/MapWrapper";
 
 export default function DashboardHome() {
-  const sample = [
-    { name: "2020", actual: 120000, budgeted: 140000 },
-    { name: "2021", actual: 90000, budgeted: 85000 },
-    { name: "2022", actual: 150000, budgeted: 160000 },
-    { name: "2023", actual: 120000, budgeted: 140000 },
-    { name: "2024", actual: 150000, budgeted: 160000 },
+  const chartData = [
+    { name: "Covered", value: 94, color: "#FF3B30" }, // red
+    { name: "Uncovered", value: 3, color: "#008000" }, // green
   ];
 
   const data = [
-    { name: "Igueben", value: 20150 },
-    { name: "Etsako East", value: 9423 },
-    { name: "Esan Central", value: 8555 },
-    { name: "Esan West", value: 7866 },
-    { name: "Esan North-East", value: 7475 },
-    { name: "Ovia South-West", value: 7283 },
-    { name: "Etsako West", value: 7268 },
-    { name: "Owan-West", value: 7229 },
-    { name: "Owan-East", value: 7119 },
-    { name: "Ovia North-East", value: 6539 },
-    { name: "Esan South-East", value: 6379 },
-    { name: "Egor", value: 6241 },
-    { name: "Uhunmwonde", value: 6166 },
-    { name: "Akoko-Edo", value: 6034 },
-    { name: "Orhionmwon", value: 5021 },
-    { name: "Etsako Central", value: 4972 },
-    { name: "Oredo", value: 3551 },
-    { name: "Ikpoba-Okha", value: 32420, color: "#cccccc" },
+    { year: "2015", anc: 65, stunting: 34, zeroDose: 13 },
+    { year: "2020", anc: 70, stunting: 40, zeroDose: 19 },
+    { year: "2023", anc: 56, stunting: 44, zeroDose: 25 },
+  ];
+
+  const lines = [
+    { key: "anc", name: "4th ANC", color: "#1D9BF0" }, // blue
+    { key: "stunting", name: "Stunting", color: "#1E3A8A" }, // dark blue
+    { key: "zeroDose", name: "Zero Dose", color: "#F97316" }, // orange
   ];
 
   return (
     <div className="space-y-8 min-h-screen">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4">
-        <RechartMetricCard
-          variant="budget"
-          title="Total State Budget"
-          amount={0.53}
-          currencySymbol="₦"
-          breakdown={[
-            { label: "Capital", percentage: 58, color: "#3B82F6" },
-            { label: "Overhead", percentage: 24, color: "#1E3A8A" },
-            { label: "Personnel", percentage: 18, color: "#C9672A" },
-          ]}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <DemographyCard
+          title="State Population"
+          subtitle="5,150,630"
+          icon={<FaPersonBooth size={24} color="#16a34a" />}
         />
-
-        <RechartMetricCard
-          variant="budget"
-          title="Total Health Budget"
-          amount={0.53}
-          currencySymbol="₦"
-          breakdown={[
-            { label: "Capital", percentage: 58, color: "#3B82F6" },
-            { label: "Overhead", percentage: 24, color: "#1E3A8A" },
-            { label: "Personnel", percentage: 18, color: "#C9672A" },
-          ]}
+        <DemographyCard
+          title="Land mass"
+          subtitle="38,832"
+          icon={<FaMapMarked size={24} color="#16a34a" />}
         />
-
-        <RechartMetricCard
-          variant="gauge"
-          title="Health Allocation"
-          valuePct={12.3}
-          maxPct={15}
+        <DemographyCard
+          title="Political wards"
+          subtitle="38,832"
+          icon={<FaMapMarked size={24} color="#16a34a" />}
         />
-
-        <RechartMetricCard
-          variant="simple"
-          title="Health Expenditure per Capita"
-          amount={4856.57}
-          currencySymbol="₦"
-          currencyDenotation="T"
+        <DemographyCard
+          title="Health Facility"
+          subtitle="1979"
+          icon={<FaMapMarked size={24} color="#16a34a" />}
+        />
+        <DemographyCard
+          title="Health workers"
+          subtitle="730,314"
+          icon={<FaMapMarked size={24} color="#16a34a" />}
+        />
+        <DemographyCard
+          title="Health Institutions"
+          subtitle="1979"
+          icon={<FaMapMarked size={24} color="#16a34a" />}
+        />
+        <DemographyCard
+          title="Political ward"
+          subtitle="1979"
+          icon={<FaMapMarked size={24} color="#16a34a" />}
+        />
+        <DemographyCard
+          title="Partners mapping"
+          subtitle="1979"
+          icon={<FaMoneyCheck size={24} color="#16a34a" />}
         />
       </div>
-      <div className="flex flex-col md:flex-row gap-4 p-4">
-        {/* Main metrics: grows, takes about 4/5 of width on md+ */}
-        <div className="flex-1 space-y-6 bg-blue-50 p-4 rounded-lg">
-          <RechartMetricCard
-            variant="budget"
-            title="Total State Budget"
-            amount={0.53}
-            currencySymbol="₦"
-            breakdown={[
-              { label: "Capital", percentage: 58, color: "#3B82F6" },
-              { label: "Overhead", percentage: 24, color: "#1E3A8A" },
-              { label: "Personnel", percentage: 18, color: "#C9672A" },
-            ]}
-          />
 
-          <RechartMetricCard
-            variant="budget"
-            title="Total Health Budget"
-            amount={0.53}
-            currencySymbol="₦"
-            breakdown={[
-              { label: "Capital", percentage: 58, color: "#3B82F6" },
-              { label: "Overhead", percentage: 24, color: "#1E3A8A" },
-              { label: "Personnel", percentage: 18, color: "#C9672A" },
-            ]}
-          />
-
-          <RechartMetricCard
-            variant="gauge"
-            title="Health Allocation"
-            valuePct={12.3}
-            maxPct={15}
-          />
-
-          <RechartMetricCard
-            variant="simple"
-            title="Health Expenditure per Capita"
-            amount={4856.57}
-            currencySymbol="₦"
-            currencyDenotation="T"
-          />
-        </div>
-
-        {/* Sidebar chart: fixed proportion on md+, full width below */}
-        <div className="w-full md:w-1/5 bg-red-50 p-4 rounded-lg">
-          <HorizontalStateBarChart
-            title="Per Capita by LGA"
-            data={data}
-            currencySymbol="₦"
-            showValueSuffix=""
-            className="w-full"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-2 p-4">
-        <ComparisonBarChart
-          title="Health Expenditure Trend"
-          data={sample}
-          currencySymbol="₦"
-          actualColor="#2563EB"
-          budgetColor="#10B981"
-          className="ui:bg-white ui:rounded-2xl ui:shadow ui:p-4"
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <DonutChart title="Health Insurance Coverage" data={chartData} />
+        <MultiLineChart
+          title="Maternal & Child Health Trends"
+          data={data}
+          lines={lines}
         />
-
-        <div className="p-4 bg-white rounded-2xl shadow">
-          <HorizontalStateBarChart
-            title="Per Capita by LGA"
-            data={data}
-            currencySymbol="₦"
-            showValueSuffix=""
-            className="ui-w-full"
-          />
-        </div>
+        <MapView
+          mapClassName={`h-96 w-full rounded-xl shadow`}
+          showCard={true}
+        />
       </div>
     </div>
   );
