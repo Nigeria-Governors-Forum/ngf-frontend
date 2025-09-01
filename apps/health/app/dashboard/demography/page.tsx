@@ -5,6 +5,7 @@ import DemographyCard from "@repo/ui/demographyCard";
 import LgaSummaryTable, { LgaRow } from "@repo/ui/lgaSummaryTable";
 import { FaMoneyCheck } from "react-icons/fa";
 import MapView from "../../components/MapWrapper";
+import { useTopbarFilters } from "../hooks/useTopBarFilter";
 
 interface DemographyPageProps {
   state?: string;
@@ -13,6 +14,11 @@ interface DemographyPageProps {
 const DemographyPage: React.FC<DemographyPageProps> = ({
   state = "Akwa Ibom",
 }) => {
+
+  const { selectedState, selectedYear } = useTopbarFilters();
+
+  console.log(selectedState, selectedYear);
+
   const data: LgaRow[] = [
     {
       lga: "Akoko South East",

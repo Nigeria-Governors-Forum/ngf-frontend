@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import ConfirmPrompt from "./confirmPrompt";
 import { FaBars } from "react-icons/fa";
+import Image from "next/image";
 
 export interface TopbarProps {
   collapsed?: boolean;
@@ -14,6 +15,9 @@ export interface TopbarProps {
   logos?: Record<string, React.FC<React.SVGProps<SVGSVGElement>>>;
   state?: string[];
   onToggleSidebar?: () => void; // new
+  showLogout?: boolean;
+  onStateChange?: (state: string) => void;
+  onYearChange?: (year: number) => void;
 }
 
 const Topbar: React.FC<TopbarProps> = ({
@@ -25,6 +29,9 @@ const Topbar: React.FC<TopbarProps> = ({
   logos = {},
   state = [],
   onToggleSidebar,
+  showLogout = false,
+  onStateChange,
+  onYearChange,
 }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedState, setSelectedState] = useState("");
@@ -83,7 +90,11 @@ const Topbar: React.FC<TopbarProps> = ({
               {/* State Select */}
               <select
                 value={selectedState}
-                onChange={(e) => setSelectedState(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSelectedState(value);
+                  onStateChange?.(value);
+                }}
                 className="ui:px-3 ui:py-1 ui:border ui:rounded-md ui:border-green-400 ui:bg-white ui:text-green-700"
               >
                 <option value="">Select State</option>
@@ -97,7 +108,11 @@ const Topbar: React.FC<TopbarProps> = ({
               {/* Year Select */}
               <select
                 value={selectedYear}
-                onChange={(e) => setSelectedYear(Number(e.target.value))}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  setSelectedYear(value);
+                  onYearChange?.(value);
+                }}
                 className="ui:px-3 ui:py-1 ui:border ui:rounded-md ui:border-green-400 ui:bg-white ui:text-green-700"
               >
                 {years.map((year) => (
@@ -117,17 +132,24 @@ const Topbar: React.FC<TopbarProps> = ({
               </div>
             </div>
             {StateLogo && (
-              <div className="ui:w-16 ui:h-16 ui:relative ui:flex-shrink-0">
-                <StateLogo className="ui:w-full ui:h-full ui:object-contain" />
+              <div className="ui:w-12 ui:h-12 ui:relative ui:bg-green-500 ui:rounded-2xl">
+                <Image
+                  src={(StateLogo as any).src ?? StateLogo}
+                  alt={selectedState}
+                  fill
+                  className="ui:object-contain"
+                />
               </div>
             )}
-            <button
-              aria-label="Logout"
-              className="ui:text-red-500 ui:border ui:border-red-200 ui:px-3 ui:py-1 ui:rounded ui:text-sm"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
+            {showLogout && (
+              <button
+                aria-label="Logout"
+                className="ui:text-red-500 ui:border ui:border-red-200 ui:px-3 ui:py-1 ui:rounded ui:text-sm"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </div>

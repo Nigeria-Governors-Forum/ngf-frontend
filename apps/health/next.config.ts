@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import withTM from "next-transpile-modules";
+
+const withTranspile = withTM(["@repo/ui"]);
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -22,7 +25,8 @@ const nextConfig: NextConfig = {
 
     // Add SVGR loader for SVGs
     config.module.rules.push({
-      test: /\.svg$/,
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
       use: ["@svgr/webpack"],
     });
 
@@ -35,4 +39,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withTranspile(nextConfig);

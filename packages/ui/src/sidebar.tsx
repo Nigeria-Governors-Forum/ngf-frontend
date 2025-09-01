@@ -15,6 +15,7 @@ import {
   FaMoneyCheck,
   FaSignOutAlt,
   FaTimes,
+  FaChevronDown,
 } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import ConfirmPrompt from "./confirmPrompt";
@@ -23,90 +24,98 @@ const cn = (...classes: (string | undefined | false)[]) =>
   classes.filter(Boolean).join(" ");
 
 export interface NavItem {
-  href: string;
+  href?: string;
   icon: React.ReactNode;
   label: string;
   roles: string[];
+  children?: NavItem[]; // ✅ add nested items
 }
 
 export const navItem: NavItem[] = [
   {
-    href: "/dashboard",
+    label: "Health",
     icon: <FaTachometerAlt />,
-    label: "Dashboard",
     roles: ["user", "acct", "audit", "admin"],
+    children: [
+      {
+        href: "/dashboard/",
+        icon: <FaTachometerAlt />,
+        label: "Dashboard",
+        roles: ["user", "acct", "audit", "admin"],
+      },
+      {
+        href: "/dashboard/demography",
+        icon: <FaMoneyCheck />,
+        label: "Demography",
+        roles: ["user", "acct", "audit", "admin"],
+      },
+      {
+        href: "/dashboard/health-facilities",
+        icon: <FaMoneyCheck />,
+        label: "Health Facilities",
+        roles: ["user", "acct", "audit", "admin"],
+      },
+      {
+        href: "/dashboard/zonal-health-facilities",
+        icon: <FaMoneyCheck />,
+        label: "Zonal Health Facilities",
+        roles: ["user", "acct", "audit", "admin"],
+      },
+      {
+        href: "/dashboard/human-resource",
+        icon: <FaMoneyCheck />,
+        label: "Human Resource",
+        roles: ["user", "acct", "audit", "admin"],
+      },
+      {
+        href: "dashboard/health-finance",
+        icon: <FaMoneyCheck />,
+        label: "Health Finance",
+        roles: ["user", "acct", "audit", "admin"],
+      },
+      {
+        href: "/dashboard/zonal-health-finance",
+        icon: <FaMoneyCheck />,
+        label: "Zonal Health Finance",
+        roles: ["user", "acct", "audit", "admin"],
+      },
+      {
+        href: "/dashboard/score-card",
+        icon: <FaMoneyCheck />,
+        label: "Score Cards",
+        roles: ["user", "acct", "audit", "admin"],
+      },
+      // {
+      //   href: "/dashboard",
+      //   icon: <FaMoneyCheck />,
+      //   label: "Access & Utilization",
+      //   roles: ["user", "acct", "audit", "admin"],
+      // },
+      // {
+      //   href: "/dashboard",
+      //   icon: <FaMoneyCheck />,
+      //   label: "Health Outcome",
+      //   roles: ["user", "acct", "audit", "admin"],
+      // },
+      // {
+      //   href: "/dashboard",
+      //   icon: <FaMoneyCheck />,
+      //   label: "Partner Mapping",
+      //   roles: ["user", "acct", "audit", "admin"],
+      // },
+      // {
+      //   href: "/dashboard",
+      //   icon: <FaMoneyCheck />,
+      //   label: "Flagship Project",
+      //   roles: ["user", "acct", "audit", "admin"],
+      // },
+    ],
   },
   {
-    href: "/dashboard/demography",
-    icon: <FaMoneyCheck />,
-    label: "Demography",
-    roles: ["user", "acct", "audit", "admin"],
-  },
-  {
-    href: "/dashboard/health-facilities",
-    icon: <FaMoneyCheck />,
-    label: "Health Facilities",
-    roles: ["user", "acct", "audit", "admin"],
-  },
-  {
-    href: "/dashboard/zonal-health-facilities",
-    icon: <FaMoneyCheck />,
-    label: "Zonal Health Facilities",
-    roles: ["user", "acct", "audit", "admin"],
-  },
-  {
-    href: "/dashboard/human-resource",
-    icon: <FaMoneyCheck />,
-    label: "Human Resource",
-    roles: ["user", "acct", "audit", "admin"],
-  },
-  {
-    href: "dashboard/health-finance",
-    icon: <FaMoneyCheck />,
-    label: "Health Finance",
-    roles: ["user", "acct", "audit", "admin"],
-  },
-    {
-    href: "/dashboard/zonal-health-finance",
-    icon: <FaMoneyCheck />,
-    label: "Zonal Health Finance",
-    roles: ["user", "acct", "audit", "admin"],
-  },
-  {
-    href: "/dashboard/score-card",
-    icon: <FaMoneyCheck />,
-    label: "Score Cards",
-    roles: ["user", "acct", "audit", "admin"],
-  },
-  // {
-  //   href: "/dashboard",
-  //   icon: <FaMoneyCheck />,
-  //   label: "Access & Utilization",
-  //   roles: ["user", "acct", "audit", "admin"],
-  // },
-  // {
-  //   href: "/dashboard",
-  //   icon: <FaMoneyCheck />,
-  //   label: "Health Outcome",
-  //   roles: ["user", "acct", "audit", "admin"],
-  // },
-  // {
-  //   href: "/dashboard",
-  //   icon: <FaMoneyCheck />,
-  //   label: "Partner Mapping",
-  //   roles: ["user", "acct", "audit", "admin"],
-  // },
-  // {
-  //   href: "/dashboard",
-  //   icon: <FaMoneyCheck />,
-  //   label: "Flagship Project",
-  //   roles: ["user", "acct", "audit", "admin"],
-  // },
-  {
-    href: "/dashboard/bank",
+    href: "/dashboard/agriculture",
     icon: <FaUniversity />,
-    label: "Banks",
-    roles: ["acct", "audit", "admin"],
+    label: "Agriculture",
+    roles: ["user","acct", "audit", "admin"],
   },
   {
     href: "/dashboard/account",
@@ -157,6 +166,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [role, setRole] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const pathname = usePathname();
 
@@ -202,6 +212,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
   const cancelPrompt = () => {
     setShowConfirm(false);
+  };
+
+  const toggleExpand = (label: string) => {
+    setExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
   };
 
   return (
@@ -251,7 +265,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           {/* Navigation */}
-          <nav
+          {/* <nav
             className="ui:flex ui:flex-col ui:space-y-2 ui:mt-2"
             aria-label="Main navigation"
           >
@@ -297,7 +311,73 @@ const Sidebar: React.FC<SidebarProps> = ({
                     </Link>
                   );
                 })}
-          </nav>
+          </nav> */}
+
+          {filteredNav.map((item) => {
+            if (item.children && item.children.length > 0) {
+              const isOpen = expanded[item.label];
+              return (
+                <div key={item.label} className="ui:space-y-1">
+                  {/* Parent item */}
+                  <button
+                    onClick={() => toggleExpand(item.label)}
+                    className="ui:w-full ui:flex ui:items-center ui:justify-between ui:p-2 ui:rounded ui:hover:bg-[#009B72]"
+                  >
+                    <div className="ui:flex ui:items-center ui:space-x-2">
+                      <span>{item.icon}</span>
+                      {!collapsed && <span>{item.label}</span>}
+                    </div>
+                    {!collapsed && (
+                      <span>
+                        {isOpen ? <FaChevronDown /> : <FaChevronRight />}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Children */}
+                  {isOpen && !collapsed && (
+                    <div className="ui:ml-6 ui:flex ui:flex-col ui:space-y-1">
+                      {item.children.map((child) => {
+                        const isActive =
+                          pathname === child.href ||
+                          pathname.startsWith(child.href + "/");
+
+                        return (
+                          <Link
+                            key={child.label}
+                            href={child.href!}
+                            className={`ui:p-2 ui:rounded ui:flex ui:items-center ui:space-x-2 ui:hover:bg-[#009B72] ${
+                              isActive ? "ui:bg-[#009B72] ui:text-white" : ""
+                            }`}
+                            onClick={closeMobile}
+                          >
+                            <span>{child.icon}</span>
+                            <span>{child.label}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            // Normal single item
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.label}
+                href={item.href!}
+                className={`ui:p-2 ui:rounded ui:flex ui:items-center ui:space-x-2 ui:hover:bg-[#009B72] ${
+                  isActive ? "ui:bg-[#009B72] ui:text-white" : ""
+                }`}
+                onClick={closeMobile}
+              >
+                <span>{item.icon}</span>
+                {!collapsed && <span>{item.label}</span>}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Footer with logout */}
