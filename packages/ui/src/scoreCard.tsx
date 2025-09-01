@@ -88,7 +88,7 @@ const ScorecardTable: React.FC<ScorecardTableProps> = ({
   const finalColumns = columns || (mode === "single" ? defaultSingleCols : defaultMultiCols);
 
   return (
-    <div className="ui:max-w-full ui:bg-white ui:rounded-2xl ui:shadow-md ui:p-4 ui:text-black">
+    <div className="ui:max-w-full ui:bg-white ui:rounded-2xl ui:shadow-md ui:p-4 ui:text-black ui:overflow-hidden" >
       <h2 className="ui:text-lg ui:font-bold ui:mb-4 ui:capitalize">{title}</h2>
 
       <div className="ui:overflow-x-auto">
@@ -133,7 +133,7 @@ const ScorecardTable: React.FC<ScorecardTableProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="ui:mt-6 ui:flex ui:gap-4 ui:justify-center">
+      <div className="ui:mt-6 ui:flex ui:gap-4 ui:justify-center ui:overflow-hidden">
         {Object.entries(statusMapping).map(([key, { label, colorClass }]) => (
           <div key={key} className="ui:flex ui:items-center ui:gap-2">
             <span

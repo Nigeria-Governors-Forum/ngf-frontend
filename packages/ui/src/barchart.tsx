@@ -50,14 +50,14 @@ const TooltipContent: React.FC<any> = ({
             className="ui:w-2 ui:h-2 ui:rounded-full ui:mr-2"
             style={{ backgroundColor: "#2563EB" }}
           />
-          <span>Actual: {formatCurrency(actual, currencySymbol)}</span>
+          <span>Budgeted: {formatCurrency(actual, currencySymbol)}</span>
         </div>
         <div className="ui:flex ui:items-center">
           <div
             className="ui:w-2 ui:h-2 ui:rounded-full ui:mr-2"
             style={{ backgroundColor: "#10B981" }}
           />
-          <span>Budgeted: {formatCurrency(budgeted, currencySymbol)}</span>
+          <span>Actual: {formatCurrency(budgeted, currencySymbol)}</span>
         </div>
       </div>
     </div>
@@ -124,25 +124,25 @@ const ComparisonBarChart: React.FC<ComparisonBarChartProps> = ({
               )}
             />
             <Bar
-              dataKey="actual"
-              name="Actual"
+              dataKey="budgeted"
+              name="Budgeted"
               fill={actualColor}
               radius={[4, 4, 0, 0]}
               maxBarSize={20}
             >
               {data.map((_, idx) => (
-                <Cell key={`actual-${idx}`} fill={actualColor} />
+                <Cell key={`budgeted-${idx}`} fill={actualColor} />
               ))}
             </Bar>
             <Bar
-              dataKey="budgeted"
-              name="Budgeted"
+              dataKey="actual"
+              name="Actual"
               fill={budgetColor}
               radius={[4, 4, 0, 0]}
               maxBarSize={20}
             >
               {data.map((_, idx) => (
-                <Cell key={`budgeted-${idx}`} fill={budgetColor} />
+                <Cell key={`actual-${idx}`} fill={budgetColor} />
               ))}
             </Bar>
           </BarChart>

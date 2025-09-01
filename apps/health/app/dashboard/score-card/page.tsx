@@ -193,9 +193,7 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ state = "Akwa Ibom" }) => {
     <>
       <div className="flex justify-around text-black">
         <div>
-          <h1 className="text-2xl font-bold mb-6">
-            Scorecard Dashboard
-          </h1>
+          <h1 className="text-2xl font-bold mb-6">Scorecard Dashboard</h1>
         </div>
 
         <div className="mb-6 text-black">
@@ -216,15 +214,31 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ state = "Akwa Ibom" }) => {
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-hidden">
-        {/* Single State View */}
+      {/* <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 overflow-hidden">
         <ScorecardTable
           mode="single"
           title={`${state} Scorecard`}
           data={columnTwo}
         />
-        {/* Multi State View */}
         <ScorecardTable mode="multi" title="National View" data={sampleData} />
+      </div> */}
+
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+        <div className="overflow-hidden rounded-xl shadow">
+          <ScorecardTable
+            mode="single"
+            title={`${state} Scorecard`}
+            data={columnTwo}
+          />
+        </div>
+
+        <div className="overflow-hidden rounded-xl shadow">
+          <ScorecardTable
+            mode="multi"
+            title="National View"
+            data={sampleData}
+          />
+        </div>
       </div>
     </>
   );

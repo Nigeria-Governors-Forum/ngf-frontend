@@ -34,7 +34,7 @@ export default function HealthFinance() {
 
   return (
     <div className="space-y-8 min-h-screen">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
         <RechartMetricCard
           variant="budget"
           title="Total State Budget"
@@ -52,11 +52,12 @@ export default function HealthFinance() {
           title="Total Health Budget"
           amount={0.53}
           currencySymbol="₦"
-          breakdown={[
-            { label: "Capital", percentage: 58, color: "#3B82F6" },
-            { label: "Overhead", percentage: 24, color: "#1E3A8A" },
-            { label: "Personnel", percentage: 18, color: "#C9672A" },
-          ]}
+           breakdown={[
+          { label: "Marketing", percentage: 40, color: "#3b82f6" }, // blue
+          { label: "Operations", percentage: 30, color: "#10b981" }, // green
+          { label: "R&D", percentage: 20, color: "#f59e0b" }, // amber
+          { label: "Other", percentage: 10, color: "#ef4444" }, // red
+        ]}
         />
 
         <RechartMetricCard

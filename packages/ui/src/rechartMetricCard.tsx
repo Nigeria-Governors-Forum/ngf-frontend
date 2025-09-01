@@ -9,6 +9,8 @@ import {
   RadialBarChart,
   RadialBar,
   PolarAngleAxis,
+  XAxis,
+  YAxis,
 } from "recharts";
 
 export type Variant = "budget" | "gauge" | "simple";
@@ -44,13 +46,29 @@ const BudgetVariant: React.FC<{
   currencySymbol: string;
   breakdown: BreakdownItem[];
   currencyDenotation?: string;
-}> = ({ title, amount, currencySymbol, breakdown, currencyDenotation }) => {
+  height?: number;
+  showLabels?: boolean;
+}> = ({
+  title,
+  amount,
+  currencySymbol,
+  breakdown,
+  currencyDenotation,
+  height = 28,
+  showLabels = true,
+}) => {
   const data = [
     breakdown.reduce<Record<string, number>>((acc, b) => {
       acc[b.label] = b.percentage;
       return acc;
     }, {}),
   ];
+
+  // const data = [
+  //   breakdown.reduce((acc, b) => ({ ...acc, [b.label]: b.percentage }), {
+  //     name: "progress",
+  //   }),
+  // ];
 
   return (
     <div className="ui:max-w-sm ui:bg-white ui:rounded-2xl ui:shadow ui:p-6 ui:flex ui:flex-col ui:gap-4 ui:border ui:border-green-400">
@@ -70,7 +88,7 @@ const BudgetVariant: React.FC<{
         </span>
       </div>
 
-      <div style={{ width: "100%", height: 16 }}>
+      {/* <div style={{ width: "100%", height: 16 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="horizontal" stackOffset="expand">
             {breakdown.map((b) => (
@@ -86,6 +104,39 @@ const BudgetVariant: React.FC<{
             ))}
           </BarChart>
         </ResponsiveContainer>
+      </div> */}
+
+      <div className="ui:w-full ui:flex ui:flex-col ui:gap-2">
+        {/* Box */}
+        <div
+          className="ui:flex ui:w-full ui:rounded-xl ui:overflow-hidden ui:shadow-sm ui:border ui:border-gray-200"
+          style={{ height }}
+        >
+          {breakdown.map((item, idx) => (
+            <div
+              key={idx}
+              style={{
+                width: `${item.percentage}%`,
+                backgroundColor: item.color,
+              }}
+              className="ui:flex ui:items-center ui:justify-center ui:text-xs ui:font-semibold ui:text-white"
+            >
+              {showLabels && item.percentage > 10 && `${item.percentage}%`}
+            </div>
+          ))}
+        </div>
+
+        <div className="ui:grid ui:grid-cols-2 ui:sm:grid-cols-4 ui:gap-2 ui:text-xs ui:text-black">
+          {breakdown.map((item, idx) => (
+            <div key={idx} className="ui:flex ui:items-center ui:gap-2">
+              <span
+                className="ui:inline-block ui:w-3 h-3 ui:rounded"
+                style={{ backgroundColor: item.color }}
+              />
+              {item.label} ({item.percentage}%)
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="ui:flex ui:gap-4 ui:mt-2 ui:justify-center ui:flex-wrap">
@@ -146,9 +197,7 @@ const GaugeVariant: React.FC<{
                 tick={false}
               />
               <RadialBar
-                minAngle={1}
                 cornerRadius={10}
-                clockWise
                 background={{ fill: "#f0f0f0" }}
                 dataKey="value"
                 animationDuration={600}
@@ -162,6 +211,8 @@ const GaugeVariant: React.FC<{
                   return <Cell key={idx} fill="#f0f0f0" />;
                 })}
               </RadialBar>
+
+              
             </RadialBarChart>
           </ResponsiveContainer>
           <div className="ui:absolute ui:inset-0 ui:flex ui:flex-col ui:items-center ui:justify-center ui:pointer-events-none">
