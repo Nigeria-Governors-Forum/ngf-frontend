@@ -112,10 +112,22 @@ export const navItem: NavItem[] = [
     ],
   },
   {
-    href: "/dashboard/agriculture",
+    href: "https://ngf-frontend-agric.vercel.app/",
     icon: <FaUniversity />,
     label: "Agriculture",
-    roles: ["user","acct", "audit", "admin"],
+    roles: ["user", "acct", "audit", "admin"],
+  },
+  {
+    href: "https://ngf-frontend-agric.vercel.app/",
+    icon: <FaUniversity />,
+    label: "Education",
+    roles: ["user", "acct", "audit", "admin"],
+  },
+  {
+    href: "https://ngf-frontend-agric.vercel.app/",
+    icon: <FaUniversity />,
+    label: "Economics",
+    roles: ["user", "acct", "audit", "admin"],
   },
   {
     href: "/dashboard/account",
