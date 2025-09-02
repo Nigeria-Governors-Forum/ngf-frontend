@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
-import withTM from "next-transpile-modules";
+// import withTM from "next-transpile-modules";
 
-const withTranspile = withTM(["@repo/ui"]);
+// const withTranspile = withTM(["@repo/ui"]);
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -39,4 +39,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withTranspile(nextConfig);
+// export default withTranspile(nextConfig);
+export default nextConfig;

@@ -10,7 +10,7 @@ import "leaflet/dist/leaflet.css";
 import LagosSVG from "../assets/map/lag.svg";
 import KanoSVG from "../assets/map/lag.svg";
 import AbujaSVG from "../assets/map/lag.svg";
-import AbiaSVG from "../assets/map/NGAB.svg";
+import AbiaSVG from "../../public/map/NGAB.svg";
 import Topbar from "@repo/ui/topbar";
 import Sidebar from "@repo/ui/sidebar";
 import { useTopbarFilters } from "./hooks/useTopBarFilter";

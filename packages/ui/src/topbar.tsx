@@ -56,6 +56,9 @@ const Topbar: React.FC<TopbarProps> = ({
 
   const StateLogo = selectedState ? logos[selectedState] : null;
 
+  console.log('StateLogo:', StateLogo);
+  console.log('StateLogo:', StateLogo?.src);
+
   return (
     <>
       <div
