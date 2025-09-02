@@ -56,7 +56,7 @@ export default function DashboardHome() {
           icon={<FaMapMarked size={24} color="#16a34a" />}
         />
         <DemographyCard
-          title="Political ward"
+          title="LGA's"
           subtitle="1979"
           icon={<FaMapMarked size={24} color="#16a34a" />}
         />

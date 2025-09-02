@@ -38,7 +38,7 @@ const stateLogos: Record<string, string> = {
   Kogi: "/map/NGKO.svg",
   Kwara: "/map/NGKW.svg",
   Lagos: "/map/NGLA.svg",
-  Nasarawa: "/map/NGNA.svg",
+  Nassarawa: "/map/NGNA.svg",
   Niger: "/map/NGNI.svg",
   Ogun: "/map/NGOG.svg",
   Ondo: "/map/NGON.svg",

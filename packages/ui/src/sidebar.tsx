@@ -124,12 +124,6 @@ export const navItem: NavItem[] = [
     roles: ["user", "acct", "audit", "admin"],
   },
   {
-    href: "https://ngf-frontend-agric.vercel.app/",
-    icon: <FaUniversity />,
-    label: "Economics",
-    roles: ["user", "acct", "audit", "admin"],
-  },
-  {
     href: "/dashboard/account",
     icon: <FaWallet />,
     label: "Accounts",

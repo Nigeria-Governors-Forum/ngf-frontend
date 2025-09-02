@@ -134,7 +134,7 @@ const Topbar: React.FC<TopbarProps> = ({
               </div>
             </div>
             {StateLogo && (
-              <div className="ui:w-12 ui:h-12 ui:relative ui:bg-green-500 ui:rounded-2xl">
+              <div className="ui:w-12 ui:h-12 ui:relative ui:bg-[#058D6C] ui:rounded-2xl ui:my-4">
                 <Image
                   src={(StateLogo as any).src ?? StateLogo}
                   alt={selectedState}
