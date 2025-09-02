@@ -10,16 +10,16 @@ import "leaflet/dist/leaflet.css";
 import LagosSVG from "../assets/map/lag.svg";
 import KanoSVG from "../assets/map/lag.svg";
 import AbujaSVG from "../assets/map/lag.svg";
-import AbiaSVG from "../../public/map/NGAB.svg";
+// import AbiaSVG from "../../public/map/NGAB.svg";
 import Topbar from "@repo/ui/topbar";
 import Sidebar from "@repo/ui/sidebar";
 import { useTopbarFilters } from "./hooks/useTopBarFilter";
 
-const stateLogos: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+const stateLogos: Record<string, string> = {
   Lagos: LagosSVG,
   Abuja: AbujaSVG,
   Kano: KanoSVG,
-  Abia: AbiaSVG,
+  Abia: '/map/NGAB.svg',
 };
 
 const metadata: Metadata = {
