@@ -2,7 +2,7 @@ import HorizontalStateBarChart from "@repo/ui/amountBar";
 import ComparisonBarChart from "@repo/ui/barchart";
 import RechartMetricCard from "@repo/ui/rechartMetricCard";
 
-export default function HealthFinance() {
+const HealthFinance = () => {
   const sample = [
     { name: "2020", actual: 120000, budgeted: 140000 },
     { name: "2021", actual: 90000, budgeted: 85000 },
@@ -98,3 +98,5 @@ export default function HealthFinance() {
     </div>
   );
 }
+
+export default HealthFinance;

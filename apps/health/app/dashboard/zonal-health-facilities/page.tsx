@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import DemographyCard from "@repo/ui/demographyCard";
-import LgaSummaryTable, { LgaRow } from "@repo/ui/lgaSummaryTable";
-import SummaryTable, { SummaryRow } from "@repo/ui/summaryTable";
-import { FaArrowRight } from "react-icons/fa";
 import MapView from "../../components/MapWrapper";
-import HorizontalStateBarChart from "@repo/ui/amountBar";
-import DataCard from "../../components/PieChartUi";
 import ZoneHealthCard from "../../components/ZoneHealthCard";
 import ComparisonBarChart from "@repo/ui/barchart";
 

@@ -7,19 +7,50 @@ import { Metadata } from "next";
 import State from "naija-state-local-government";
 import "leaflet/dist/leaflet.css";
 
-import LagosSVG from "../assets/map/lag.svg";
-import KanoSVG from "../assets/map/lag.svg";
-import AbujaSVG from "../assets/map/lag.svg";
-// import AbiaSVG from "../../public/map/NGAB.svg";
 import Topbar from "@repo/ui/topbar";
 import Sidebar from "@repo/ui/sidebar";
 import { useTopbarFilters } from "./hooks/useTopBarFilter";
 
+// console.log(State.states());
+
 const stateLogos: Record<string, string> = {
-  Lagos: LagosSVG,
-  Abuja: AbujaSVG,
-  Kano: KanoSVG,
-  Abia: '/map/NGAB.svg',
+  Abia: "/map/NGAB.svg",
+  Adamawa: "/map/NGAD.svg",
+  "Akwa Ibom": "/map/NGAK.svg",
+  Anambra: "/map/NGAN.svg",
+  Bauchi: "/map/NGBA.svg",
+  Bayelsa: "/map/NGBY.svg",
+  Benue: "/map/NGBE.svg",
+  Borno: "/map/NGBR.svg",
+  "Cross River": "/map/NGRI.svg",
+  Delta: "/map/NGDE.svg",
+  Ebonyi: "/map/NGEB.svg",
+  Edo: "/map/NGED.svg",
+  Ekiti: "/map/NGEK.svg",
+  Enugu: "/map/NGEN.svg",
+  Gombe: "/map/NGGO.svg",
+  Imo: "/map/NGIM.svg",
+  Jigawa: "/map/NGJI.svg",
+  Kaduna: "/map/NGKD.svg",
+  Kano: "/map/NGKN.svg",
+  Katsina: "/map/NGKT.svg",
+  Kebbi: "/map/NGKE.svg",
+  Kogi: "/map/NGKO.svg",
+  Kwara: "/map/NGKW.svg",
+  Lagos: "/map/NGLA.svg",
+  Nasarawa: "/map/NGNA.svg",
+  Niger: "/map/NGNI.svg",
+  Ogun: "/map/NGOG.svg",
+  Ondo: "/map/NGON.svg",
+  Osun: "/map/NGOS.svg",
+  Oyo: "/map/NGOY.svg",
+  Plateau: "/map/NGPL.svg",
+  Rivers: "/map/NGRI.svg",
+  Sokoto: "/map/NGSO.svg",
+  Taraba: "/map/NGTA.svg",
+  Yobe: "/map/NGYO.svg",
+  Zamfara: "/map/NGZA.svg",
+  "Federal Capital Territory": "/map/NGFC.svg", // Federal Capital Territory (Abuja)
 };
 
 const metadata: Metadata = {

@@ -12,7 +12,7 @@ export interface TopbarProps {
   onLogout?: () => void;
   title?: string;
   headerHeight?: string;
-  logos?: Record<string, React.FC<React.SVGProps<SVGSVGElement>>>;
+  logos?: Record<string, string | React.FC<React.SVGProps<SVGSVGElement>>>;
   state?: string[];
   onToggleSidebar?: () => void; // new
   showLogout?: boolean;
@@ -57,7 +57,6 @@ const Topbar: React.FC<TopbarProps> = ({
   const StateLogo = selectedState ? logos[selectedState] : null;
 
   console.log('StateLogo:', StateLogo);
-  // console.log('StateLogo:', StateLogo?.src);
 
   return (
     <>

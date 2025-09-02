@@ -68,7 +68,7 @@ export const navItem: NavItem[] = [
         roles: ["user", "acct", "audit", "admin"],
       },
       {
-        href: "dashboard/health-finance",
+        href: "/dashboard/health-finance",
         icon: <FaMoneyCheck />,
         label: "Health Finance",
         roles: ["user", "acct", "audit", "admin"],
