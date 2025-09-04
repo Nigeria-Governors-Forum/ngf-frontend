@@ -192,7 +192,11 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   useEffect(() => {
     // Replace with real auth lookup
-    setRole("user");
+    const user = sessionStorage.getItem("user");
+    const parsedUser = JSON.parse(user ?? "{}");
+    console.log("role", parsedUser.role);
+
+    setRole(parsedUser.role);
   }, []);
 
   const toggleMobile = useCallback(() => {
@@ -203,9 +207,29 @@ const Sidebar: React.FC<SidebarProps> = ({
     setMobileOpen(false);
   }, [setMobileOpen]);
 
-  const filteredNav = navItems.filter((item) =>
-    role ? item.roles.includes(role) : false
-  );
+  // const filteredNav = navItems.filter((item) =>
+  //   role ? item.roles.includes(role) : false
+  // );
+
+  const filteredNav = navItems
+    .map((item) => {
+      if (item.children) {
+        // filter children by role
+        const allowedChildren = item.children.filter((child) =>
+          child.roles.includes(role!)
+        );
+
+        // keep parent only if it has visible children
+        if (allowedChildren.length > 0) {
+          return { ...item, children: allowedChildren };
+        }
+        return null;
+      }
+
+      // normal single item
+      return item.roles.includes(role!) ? item : null;
+    })
+    .filter(Boolean) as NavItem[];
 
   const isActive = useCallback(
     (href: string) => {
@@ -275,55 +299,6 @@ const Sidebar: React.FC<SidebarProps> = ({
               )}
             />
           </div>
-
-          {/* Navigation */}
-          {/* <nav
-            className="ui:flex ui:flex-col ui:space-y-2 ui:mt-2"
-            aria-label="Main navigation"
-          >
-            {role &&
-              navItems
-                .filter((item) => item.roles.includes(role))
-                .map((item) => {
-                  // Normalize href too (strip leading slash for comparison)
-                  const rawHref = item.href.startsWith("/")
-                    ? item.href
-                    : `/${item.href}`;
-                  const normalizedHref = normalizePath(rawHref);
-
-                  // Active if exact match or deeper under that route (except root dashboard)
-                  const isActive =
-                    normalizedHref === "/dashboard"
-                      ? pathname === "/dashboard"
-                      : pathname === normalizedHref ||
-                        pathname.startsWith(normalizedHref + "/");
-
-                  return (
-                    <Link
-                      key={item.label}
-                      href={isActive ? "#" : rawHref}
-                      onClick={(e) => {
-                        if (isActive) {
-                          e.preventDefault();
-                          return;
-                        }
-                        closeMobile();
-                      }}
-                      aria-current={isActive ? "page" : undefined}
-                      className={`ui:p-2 ui:rounded ui:flex ui:items-center ui:space-x-2 ui:transition-all ui:duration-200 ui:hover:bg-[#009B72] ${
-                        isActive ? "ui:bg-[#009B72] ui:text-white" : ""
-                      }`}
-                    >
-                      <span className="ui:text-lg">{item.icon}</span>
-                      {!collapsed && (
-                        <span className="ui:ml-2 ui:truncate">
-                          {item.label}
-                        </span>
-                      )}
-                    </Link>
-                  );
-                })}
-          </nav> */}
 
           {filteredNav.map((item) => {
             if (item.children && item.children.length > 0) {

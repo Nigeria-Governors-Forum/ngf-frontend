@@ -1,13 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaUpload, FaSpinner } from "react-icons/fa";
+import { connectSSE } from "../../../api-client/src";
 
 const UploadPage = () => {
   const [file, setFile] = useState<File | null>(null);
   const [year, setYear] = useState<number>(2024);
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState<any>(null);
+
+  useEffect(() => {
+    const disconnect = connectSSE(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/progress/details`,
+      (data) => {
+        setProgress(data);
+      }
+    );
+
+    return () => {
+      disconnect();
+    };
+  }, []);
 
   const years = Array.from({ length: 10 }, (_, i) => 2025 - i);
 
@@ -31,7 +46,7 @@ const UploadPage = () => {
       setMessage("⏳ Uploading...");
 
       const res = await fetch(
-        `http://localhost:3000/api/v1/user/data/${year}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/data/${year}`,
         {
           method: "POST",
           body: formData,
@@ -39,7 +54,8 @@ const UploadPage = () => {
       );
 
       const data = await res.json();
-      setMessage(JSON.stringify(data, null, 2));
+      //   setMessage(JSON.stringify(data, null, 2));
+      setMessage(data.message || "✅ Upload successful!");
     } catch (err: any) {
       setMessage(`❌ Upload failed: ${err.message}`);
     } finally {
@@ -110,6 +126,11 @@ const UploadPage = () => {
           <pre className="mt-6 p-4 bg-gray-100 rounded-lg text-sm text-gray-800 whitespace-pre-wrap overflow-x-auto">
             {message}
           </pre>
+        )}
+        {progress ? (
+          <pre>{JSON.stringify(progress, null, 2)}</pre>
+        ) : (
+          <p>Waiting for updates...</p>
         )}
       </div>
     </div>
