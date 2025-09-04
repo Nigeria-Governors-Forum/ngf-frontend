@@ -15,6 +15,8 @@ const UploadPage = () => {
     const disconnect = connectSSE(
       `${process.env.NEXT_PUBLIC_API_URL}/user/progress/details`,
       (data) => {
+        console.log('data', data);
+
         setProgress(data);
       }
     );

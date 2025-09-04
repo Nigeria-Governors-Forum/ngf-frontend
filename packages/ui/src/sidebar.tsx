@@ -91,6 +91,12 @@ export const navItem: NavItem[] = [
         label: "Data Upload",
         roles: ["h-admin", "s-admin", "user"],
       },
+      {
+        href: "/dashboard/register",
+        icon: <FaMoneyCheck />,
+        label: "Register User",
+        roles: ["h-admin", "s-admin"],
+      },
       // {
       //   href: "/dashboard",
       //   icon: <FaMoneyCheck />,

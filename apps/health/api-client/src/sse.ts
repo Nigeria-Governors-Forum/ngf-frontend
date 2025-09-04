@@ -8,6 +8,7 @@ export function connectSSE<T = any>(
   eventSource.onmessage = (event) => {
     try {
       const parsed = JSON.parse(event.data);
+      console.log("Progress:", parsed.message, parsed.percent);
       onMessage(parsed);
     } catch (err) {
       console.error("Failed to parse SSE message", err);
