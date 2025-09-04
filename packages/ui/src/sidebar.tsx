@@ -88,7 +88,7 @@ export const navItem: NavItem[] = [
       {
         href: "/dashboard/upload-data",
         icon: <FaMoneyCheck />,
-        label: "Upload",
+        label: "Data Upload",
         roles: ["h-admin", "s-admin", "user"],
       },
       // {
