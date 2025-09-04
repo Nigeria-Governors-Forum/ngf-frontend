@@ -6,6 +6,15 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Endpoints, httpClient } from "../api-client/src";
 
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  state: string;
+  sub: number;
+  username: string;
+}
 export default function Page() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,10 +34,21 @@ export default function Page() {
 
   async function fetchData() {
     try {
-      const stats = await httpClient.get(Endpoints.auth.login);
-      console.log(stats);
+      const stats: {
+        access_token: string;
+        user: User;
+      } = await httpClient.post(Endpoints.auth.login, {
+        email: username,
+        password,
+      });
+      sessionStorage.setItem("token", stats.access_token);
+      sessionStorage.setItem("user", JSON.stringify(stats.user));
+
+      router.push("/dashboard");
+      toast.success(`Welcome, ${username}!`);
     } catch (error) {
       console.error("Error fetching data:", error);
+      toast.error("Invalid Credentials");
     } finally {
       setLoading(false);
     }
@@ -37,13 +57,7 @@ export default function Page() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate async action
     fetchData();
-    setTimeout(() => {
-      setLoading(false);
-      router.push("/dashboard");
-      toast.success(`Welcome, ${username}!`);
-    }, 1500);
   };
 
   return (

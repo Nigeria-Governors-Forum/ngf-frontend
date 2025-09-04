@@ -1,3 +1,5 @@
+import { Endpoints } from "./endpoints"; 
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 async function request<T>(
@@ -6,12 +8,21 @@ async function request<T>(
   body?: unknown,
   headers: Record<string, string> = {}
 ): Promise<T> {
+  let finalHeaders: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...headers,
+  };
+
+  if (path !== Endpoints.auth.login) {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      finalHeaders.Authorization = `Bearer ${token}`;
+    }
+  }
+
   const res = await fetch(`${API_URL}${path}`, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-      ...headers,
-    },
+    headers: finalHeaders,
     body: body ? JSON.stringify(body) : undefined,
   });
 
