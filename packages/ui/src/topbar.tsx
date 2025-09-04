@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ConfirmPrompt from "./confirmPrompt";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
+
+import { useTopbarFilters } from "../../../apps/health/app/dashboard/hooks/useTopBarFilter";
 
 export interface TopbarProps {
   collapsed?: boolean;
@@ -34,9 +36,11 @@ const Topbar: React.FC<TopbarProps> = ({
   onYearChange,
 }) => {
   const [showConfirm, setShowConfirm] = useState(false);
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  // const [selectedState, setSelectedState] = useState("");
+  // const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const router = useRouter();
+
+  const { selectedState, selectedYear, setSelectedYear, setSelectedState} = useTopbarFilters();
 
   const years = Array.from({ length: 10 }, (_, i) => 2025 - i);
 
@@ -56,7 +60,11 @@ const Topbar: React.FC<TopbarProps> = ({
 
   const StateLogo = selectedState ? logos[selectedState] : null;
 
-  console.log('StateLogo:', StateLogo);
+  useEffect(() => {
+    const state = sessionStorage.getItem("user");
+    const parsedState = JSON.parse(state ?? "{}");
+    setSelectedState(parsedState.state || "");
+  }, []);
 
   return (
     <>

@@ -13,7 +13,7 @@ async function request<T>(
     ...headers,
   };
 
-  if (path !== Endpoints.auth.login) {
+  if (path !== Endpoints.auth.login || path !== Endpoints.auth.register) {
     const token = sessionStorage.getItem("token");
     if (token) {
       finalHeaders.Authorization = `Bearer ${token}`;
