@@ -4,7 +4,7 @@ import { useState } from "react";
 import LandingPage from "@repo/ui/landingPage";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-
+import { Endpoints, httpClient } from "../api-client/src";
 
 export default function Page() {
   const [username, setUsername] = useState("");
@@ -23,16 +23,29 @@ export default function Page() {
     setPassword(e.target.value);
   };
 
+  async function fetchData() {
+    try {
+      const stats = await httpClient.get(Endpoints.auth.login);
+      console.log(stats);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     // Simulate async action
+    fetchData();
     setTimeout(() => {
       setLoading(false);
-      router.push('/dashboard');
+      router.push("/dashboard");
       toast.success(`Welcome, ${username}!`);
     }, 1500);
   };
+
   return (
     <>
       <Toaster position="top-right" />

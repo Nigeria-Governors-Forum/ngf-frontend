@@ -85,6 +85,12 @@ export const navItem: NavItem[] = [
         label: "Score Cards",
         roles: ["user", "acct", "audit", "admin"],
       },
+      {
+        href: "/dashboard/upload-data",
+        icon: <FaMoneyCheck />,
+        label: "Upload",
+        roles: ["h-admin", "s-admin", "user"],
+      },
       // {
       //   href: "/dashboard",
       //   icon: <FaMoneyCheck />,
