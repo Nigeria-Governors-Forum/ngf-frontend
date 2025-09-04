@@ -22,8 +22,6 @@ const RegisterPage = () => {
   const roles = ["user", "gov", "h-admin"];
   const states = State.states();
 
-  console.log(states);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
