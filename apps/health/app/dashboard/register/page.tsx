@@ -5,6 +5,7 @@ import { FaUserPlus, FaSpinner } from "react-icons/fa";
 import State from "naija-state-local-government";
 import { Endpoints, httpClient } from "../../../api-client/src";
 import LoadingScreen from "@repo/ui/loadingScreen";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -41,12 +42,7 @@ const RegisterPage = () => {
 
       const res = await httpClient.post(Endpoints.auth.register, form);
 
-      console.log("res", res);
-
-      if (!res) {
-        throw new Error("Registration failed");
-      }
-
+      toast.success("Registration successful");
       setMessage("✅ Registration successful!");
     } catch (err: any) {
       setMessage(`❌ Registration failed: ${err.message}`);
