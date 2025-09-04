@@ -43,8 +43,8 @@ const RegisterPage = () => {
 
       console.log("res", res);
 
-      if (!res.ok) {
-        throw new Error(res.message || "Registration failed");
+      if (!res) {
+        throw new Error("Registration failed");
       }
 
       setMessage("✅ Registration successful!");
