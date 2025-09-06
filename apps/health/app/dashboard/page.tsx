@@ -68,7 +68,7 @@ export default function DashboardHome() {
           <LoadingScreen text="Please wait..." />
       )}
       <div className="space-y-8 min-h-screen">
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <DemographyCard
             title="State Population"
             subtitle={formatNumber(stateData?.total_population || "N/A") as any}
@@ -111,7 +111,7 @@ export default function DashboardHome() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <DonutChart title="Health Insurance Coverage" data={chartData} />
           <MultiLineChart
             title="Maternal & Child Health Trends"
