@@ -6,8 +6,8 @@ import ConfirmPrompt from "./confirmPrompt";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 
-// import { useTopbarFilters } from "../../../apps/health/app/dashboard/hooks/useTopBarFilter";
-import { useTopbarFilters } from "../../../apps/health/app/dashboard/hooks/TopbarFiltersContext";
+// import { useTopbarFilters } from "../../../apps/health/app/dashboard/hooks/TopbarFiltersContext";
+import { useTopbarFilters } from "./hooks/TopbarFiltersContext";
 
 export interface TopbarProps {
   collapsed?: boolean;
