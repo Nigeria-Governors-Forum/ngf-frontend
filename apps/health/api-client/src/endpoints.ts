@@ -4,6 +4,9 @@ export const Endpoints = {
     register: "/user/register",
     profile: "/user/me",
   },
+  dashboard: {
+    summary: "/dashboard",
+  },
   users: {
     list: "/user",
     email: (id: string) => `/user/${id}`,

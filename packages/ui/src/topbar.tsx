@@ -6,7 +6,8 @@ import ConfirmPrompt from "./confirmPrompt";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 
-import { useTopbarFilters } from "../../../apps/health/app/dashboard/hooks/useTopBarFilter";
+// import { useTopbarFilters } from "../../../apps/health/app/dashboard/hooks/useTopBarFilter";
+import { useTopbarFilters } from "../../../apps/health/app/dashboard/hooks/TopbarFiltersContext";
 
 export interface TopbarProps {
   collapsed?: boolean;
@@ -36,19 +37,20 @@ const Topbar: React.FC<TopbarProps> = ({
   onYearChange,
 }) => {
   const [showConfirm, setShowConfirm] = useState(false);
-  // const [selectedState, setSelectedState] = useState("");
-  // const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const router = useRouter();
 
-  const { selectedState, selectedYear, setSelectedYear, setSelectedState} = useTopbarFilters();
+  const { selectedState, selectedYear, setSelectedYear, setSelectedState } =
+    useTopbarFilters();
 
   const years = Array.from({ length: 10 }, (_, i) => 2025 - i);
 
   const handleLogout = () => setShowConfirm(true);
+
   const confirmLogout = () => {
     setShowConfirm(false);
     if (onLogout) onLogout();
   };
+
   const cancelPrompt = () => setShowConfirm(false);
 
   const currentDate = new Date().toLocaleDateString("en-US", {
@@ -61,10 +63,17 @@ const Topbar: React.FC<TopbarProps> = ({
   const StateLogo = selectedState ? logos[selectedState] : null;
 
   useEffect(() => {
-    const state = sessionStorage.getItem("user");
-    const parsedState = JSON.parse(state ?? "{}");
-    setSelectedState(parsedState.state || "");
-  }, []);
+    try {
+      const storedUser = sessionStorage.getItem("user");
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        setSelectedState(parsed?.state || "");
+      }
+    } catch (err) {
+      console.warn("Invalid session user data:", err);
+      setSelectedState("");
+    }
+  }, [setSelectedState]);
 
   return (
     <>

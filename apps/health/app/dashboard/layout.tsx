@@ -9,7 +9,8 @@ import "leaflet/dist/leaflet.css";
 
 import Topbar from "@repo/ui/topbar";
 import Sidebar from "@repo/ui/sidebar";
-import { useTopbarFilters } from "./hooks/useTopBarFilter";
+// import { useTopbarFilters } from "./hooks/useTopBarFilter";
+import { TopbarFiltersProvider, useTopbarFilters } from "./hooks/TopbarFiltersContext";
 
 // console.log(State.states());
 
@@ -77,11 +78,10 @@ export default function DashboardLayout({
 
   const sidebarWidth = collapsed ? 80 : 256;
 
-  const { setSelectedState, setSelectedYear } = useTopbarFilters();
-
   return (
     <>
       <Toaster position="top-right" />
+
       <div
         className="flex min-h-screen bg-ngfGreen transition-all duration-300 ease-in-out"
         style={{ "--sidebar-width": `${sidebarWidth}px` } as any}
@@ -105,19 +105,38 @@ export default function DashboardLayout({
 
         {/* Main area */}
         <div className="flex flex-col flex-1 transition-all duration-300 ease-in-out md:ml-[var(--sidebar-width)]">
-          <Topbar
-            collapsed={collapsed}
-            headerHeight="h-28"
-            logos={stateLogos}
-            state={State.states()}
-            onToggleSidebar={() => setMobileOpen((o) => !o)}
-            onStateChange={setSelectedState}
-            onYearChange={setSelectedYear}
-            showLogout={false}
-          />
-          <main className="p-4">{children}</main>
+          <TopbarFiltersProvider>
+            <TopbarWithFilters
+              collapsed={collapsed}
+              onToggleSidebar={() => setMobileOpen((o) => !o)}
+            />
+            <main className="p-4">{children}</main>
+          </TopbarFiltersProvider>
         </div>
       </div>
     </>
+  );
+}
+
+function TopbarWithFilters({
+  collapsed,
+  onToggleSidebar,
+}: {
+  collapsed: boolean;
+  onToggleSidebar: () => void;
+}) {
+  const { setSelectedState, setSelectedYear } = useTopbarFilters();
+
+  return (
+    <Topbar
+      collapsed={collapsed}
+      headerHeight="h-28"
+      logos={stateLogos}
+      state={State.states()}
+      onToggleSidebar={onToggleSidebar}
+      onStateChange={setSelectedState}
+      onYearChange={setSelectedYear}
+      showLogout={false}
+    />
   );
 }
