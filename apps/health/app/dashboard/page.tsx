@@ -5,12 +5,12 @@ import { FaMapMarked, FaMoneyCheck, FaPersonBooth } from "react-icons/fa";
 import DonutChart from "../components/DonoughtChart";
 import MultiLineChart from "../components/LineChart";
 import MapView from "../components/MapWrapper";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Endpoints, httpClient } from "../../api-client/src";
 import toast from "react-hot-toast";
-import LoadingScreen from "@repo/ui/packages/ui/src/loadingScreen";
 import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
-// import { useTopbarFilters } from "./hooks/TopbarFiltersContext";
+import LoadingScreen from "@repo/ui/loadingScreen";
+// import LoadingScreen from "@repo/ui/packages/ui/src/loadingScreen";
 
 export const formatNumber = (num: number): string => {
   return num.toLocaleString("en-US");
@@ -65,9 +65,7 @@ export default function DashboardHome() {
   return (
     <>
       {loading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <LoadingScreen text="Please wait..." />
-        </div>
       )}
       <div className="space-y-8 min-h-screen">
         <div className="grid grid-cols-2 md:grid-cols-2 gap-4">

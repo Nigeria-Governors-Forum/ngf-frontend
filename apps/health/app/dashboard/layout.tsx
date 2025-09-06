@@ -10,9 +10,6 @@ import "leaflet/dist/leaflet.css";
 import Topbar from "@repo/ui/topbar";
 import Sidebar from "@repo/ui/sidebar";
 import { TopbarFiltersProvider, useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
-// import { useTopbarFilters } from "./hooks/useTopBarFilter";
-// import { TopbarFiltersProvider, useTopbarFilters } from "./hooks/TopbarFiltersContext";
-
 // console.log(State.states());
 
 const stateLogos: Record<string, string> = {
