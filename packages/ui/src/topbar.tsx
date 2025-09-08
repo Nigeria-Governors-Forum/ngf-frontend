@@ -1,7 +1,7 @@
 "use client";
 
 import React, { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import ConfirmPrompt from "./confirmPrompt";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
@@ -27,7 +27,7 @@ const Topbar: React.FC<TopbarProps> = ({
   collapsed,
   userName,
   onLogout,
-  title = "Edo state Health Finance Dashboard (2023)",
+  title = "Health Desk Dashboard",
   headerHeight = "h-16",
   logos = {},
   state = [],
@@ -37,10 +37,21 @@ const Topbar: React.FC<TopbarProps> = ({
   onYearChange,
 }) => {
   const [showConfirm, setShowConfirm] = useState(false);
+  const [topBarTitle, setTopBarTitle] = useState("");
   const router = useRouter();
+  const pathname = usePathname();
 
   const { selectedState, selectedYear, setSelectedYear, setSelectedState } =
     useTopbarFilters();
+
+  useEffect(() => {
+    if (!selectedYear) return;
+    setTopBarTitle(
+      pathname === "/dashboard"
+        ? `Dashboard ${onYearChange ? ` - ${selectedYear}` : ""}`
+        : title
+    );
+  }, [selectedYear, pathname, title, onYearChange]);
 
   const years = Array.from({ length: 10 }, (_, i) => 2025 - i);
 
@@ -103,7 +114,7 @@ const Topbar: React.FC<TopbarProps> = ({
           {/* Center: Title + selectors */}
           <div className="ui:flex ui:flex-col ui:items-center ui:flex-1 ui:gap-2">
             <h2 className="ui:text-center ui:text-lg ui:font-bold ui:text-green-600">
-              {title}
+              {topBarTitle}
             </h2>
             <div className="ui:flex ui:flex-wrap ui:gap-2">
               {/* State Select */}
@@ -151,7 +162,7 @@ const Topbar: React.FC<TopbarProps> = ({
               </div>
             </div>
             {StateLogo && (
-              <div className="ui:w-12 ui:h-12 ui:relative ui:bg-[#058D6C] ui:rounded-2xl ui:my-4">
+              <div className="ui:w-12 ui:h-12 ui:relative ui:bg-[#07923e] ui:rounded-2xl ui:my-4">
                 <Image
                   src={(StateLogo as any).src ?? StateLogo}
                   alt={selectedState}

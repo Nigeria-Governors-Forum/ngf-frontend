@@ -24,9 +24,9 @@ export interface MapViewProps {
   mapClassName?: any;
   showCard?: boolean;
   title?: string;
-  total?: string;
+  total?: any;
   safe?: string;
-  h2r?: string;
+  h2r?: any;
   onToggle?: () => void;
 }
 
@@ -37,8 +37,8 @@ export const MapView: React.FC<MapViewProps> = ({
   showCard = false,
   title = "Population by Accessibility",
   total = 10,
-  safe = 8,
   h2r = 2,
+  safe = total - h2r,
   onToggle,
 }) => {
   return (
@@ -82,7 +82,7 @@ export const MapView: React.FC<MapViewProps> = ({
             }}
           />
         )}
-        <Marker position={center}>
+        <Marker position={center} >
           <Popup>Selected Location</Popup>
         </Marker>
       </MapContainer>
