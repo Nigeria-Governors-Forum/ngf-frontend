@@ -12,6 +12,18 @@ export interface LgaRow {
   status?: LgaStatus; // determines background accent
 }
 
+export interface LgaLookup {
+  hard_to_reach_lgas: string;
+  health_facilities: number;
+  id: number;
+  lga: string;
+  lga_population: number;
+  number_of_wards: number;
+  page: string;
+  state: string;
+  year: number;
+  zone: string;
+}
 export interface StatusStyle {
   label: string;
   bgClass: string;
@@ -21,7 +33,7 @@ export interface StatusStyle {
 
 export interface LgaSummaryTableProps {
   title?: string;
-  data: LgaRow[];
+  data: LgaLookup[];
   statusStyles?: Partial<Record<LgaStatus, StatusStyle>>;
 }
 
@@ -95,13 +107,13 @@ const LgaSummaryTable: React.FC<LgaSummaryTableProps> = ({
           </thead>
           <tbody>
             {data.map((row, i) => {
-              const status = row.status || "unknown";
-              const style = styles[status];
+              const status = row.hard_to_reach_lgas || "unknown";
+              const style = styles[status as LgaStatus] || styles.unknown;
               return (
                 <tr
                   key={`${row.lga}-${i}`}
                   className={`ui:border-t ui:border-green-700 ${
-                    status === "hard"
+                    status === "Yes"
                       ? "ui:bg-red-400" // you can also emphasize full row
                       : ""
                   }`}
@@ -113,9 +125,9 @@ const LgaSummaryTable: React.FC<LgaSummaryTableProps> = ({
                       {/* colored pill for status */}
                       <span
                         className={`ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ${
-                          status === "safe"
+                          status === "No"
                             ? "ui:bg-green-600"
-                            : status === "hard"
+                            : status === "Yes"
                               ? "ui:bg-red-600"
                               : status === "unknown"
                                 ? "ui:bg-gray-500"
@@ -126,13 +138,13 @@ const LgaSummaryTable: React.FC<LgaSummaryTableProps> = ({
                     </div>
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
-                    {row.population}
+                    {row.lga_population}
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
-                    {row.healthFacilities}
+                    {row.health_facilities}
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
-                    {row.politicalWards}
+                    {row.number_of_wards}
                   </td>
                 </tr>
               );

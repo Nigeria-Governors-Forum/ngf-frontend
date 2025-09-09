@@ -4,13 +4,14 @@ import DemographyCard from "@repo/ui/demographyCard";
 import { FaMapMarked, FaMoneyCheck, FaPersonBooth } from "react-icons/fa";
 import DonutChart from "../components/DonoughtChart";
 import MultiLineChart from "../components/LineChart";
-import MapView from "../components/MapWrapper";
+// import MapView from "../components/MapWrapper";
 import { useEffect, useState } from "react";
 import { Endpoints, httpClient } from "../../api-client/src";
 import toast from "react-hot-toast";
 import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
 import LoadingScreen from "@repo/ui/loadingScreen";
-import { stat } from "fs";
+import dynamic from "next/dynamic";
+import MapView from "../components/MapWrapper";
 
 export const formatNumber = (num: number): string => {
   return num.toLocaleString("en-US");
@@ -20,6 +21,146 @@ export default function DashboardHome() {
   const [loading, setLoading] = useState(false);
   const { selectedState, selectedYear, setSelectedState } = useTopbarFilters();
   const [stateData, setStateData] = useState<any>();
+
+  const [rawTopoOrGeo, setRawTopoOrGeo] = useState<any>(null);
+  const [mapGeo, setMapGeo] = useState<any>(null);
+
+  const stateAlias: Record<string, string> = {
+    fct: "federalcapitalterritory",
+    federalcapitalterritory: "federalcapitalterritory",
+    adamawa: "adamawa",
+    abia: "abia",
+    lagos: "lagos",
+    // Add more if your shapefile uses "xyz state"
+  };
+
+  const normalize = (s?: string) =>
+    (s ?? "")
+      .toString()
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
+
+  useEffect(() => {
+    const loadShape = async () => {
+      try {
+        const res = await fetch("/Nigeria_shapefile.json"); // put file in /public
+        const json = await res.json();
+
+        if (json?.features?.length) {
+          console.log(
+            "🔎 Example feature properties:",
+            json.features[0].properties
+          );
+        } 
+        // if Topology, convert to GeoJSON (take the first object)
+        if (json?.type === "Topology") {
+          const topojson = await import("topojson-client");
+          const objName = Object.keys(json.objects)[0];
+          const geo = (topojson as any).feature(json, json.objects[objName]);
+          setRawTopoOrGeo(geo);
+        } else {
+          setRawTopoOrGeo(json);
+        }
+      } catch (err) {
+        console.error("Could not load shapefile:", err);
+      }
+    };
+
+    loadShape();
+  }, []);
+
+  useEffect(() => {
+    if (!rawTopoOrGeo || !stateData || !selectedState) return;
+
+    // 🔹 Normalize helper
+    const normalize = (s?: string) =>
+      (s ?? "")
+        .toString()
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+    // 🔹 Handle alias
+    const stateAlias: Record<string, string> = {
+      fct: "federalcapitalterritory",
+      federalcapitalterritory: "federalcapitalterritory",
+      // add more if you see mismatches
+    };
+
+    const rawNorm = normalize(
+      selectedState === "Federal Capital Territory" ? "FCT" : selectedState
+    );
+    const stateNorm = stateAlias[rawNorm] || rawNorm;
+
+    console.log("🟢 Selected state (raw):", selectedState);
+    console.log("🟢 After normalize:", rawNorm);
+    console.log("🟢 After alias:", stateNorm);
+
+    // 🔹 Debug shapefile states
+    if (rawTopoOrGeo?.features?.length) {
+      const uniqueStates = [
+        ...new Set(rawTopoOrGeo.features.map((f: any) => f.properties?.NAME_1)),
+      ];
+      console.log("📍 All shapefile states (NAME_1):", uniqueStates);
+    }
+
+    // 🔹 Build LGA lookup from API
+    const dem = stateData.demography_LGA ?? [];
+    const lgaLookup = dem.reduce((acc: Record<string, any>, item: any) => {
+      const key = normalize(item.lga);
+      acc[key] = {
+        population: item.lga_population,
+        hardToReach: item.hard_to_reach_lgas === "Yes",
+        name: item.lga,
+      };
+      return acc;
+    }, {});
+
+    // 🔹 Filter shapefile features for this state
+    const stateFeatures = (rawTopoOrGeo.features || []).filter((f: any) => {
+      let nameProp = f.properties?.NAME_1 ?? f.properties?.state ?? "";
+      const cleaned = nameProp.replace(/state$/i, "");
+      const nameNorm = normalize(cleaned);
+
+      const isMatch =
+        nameNorm.includes(stateNorm) || stateNorm.includes(nameNorm);
+
+      if (isMatch) {
+        console.log(`✅ MATCHED shapefile state:`, nameProp, "→", nameNorm);
+      } else {
+        console.log(`❌ NOT matched:`, nameProp, "→", nameNorm);
+      }
+
+      return isMatch;
+    });
+
+    console.log("✅ Total matched features:", stateFeatures.length);
+
+    // 🔹 Enrich with population + status
+    const enrichedFeatures = stateFeatures.map((f: any) => {
+      const lgaProp =
+        f.properties?.NAME_2 ?? f.properties?.LGA ?? f.properties?.NAME ?? "";
+      const key = normalize(lgaProp);
+      const info = lgaLookup[key];
+
+      if (!info) {
+        console.log(`⚠️ No LGA data match for:`, lgaProp, "→", key);
+      }
+
+      return {
+        ...f,
+        properties: {
+          ...f.properties,
+          status: info ? (info.hardToReach ? "bad" : "good") : "unknown",
+          population: info?.population ?? null,
+          lga: info?.name ?? lgaProp,
+        },
+      };
+    });
+
+    console.log("✨ Enriched features:", enrichedFeatures.length);
+
+    setMapGeo({ type: "FeatureCollection", features: enrichedFeatures });
+  }, [rawTopoOrGeo, stateData, selectedState]);
 
   const fetchData = async () => {
     if (!selectedState || !selectedYear) return;
@@ -55,22 +196,22 @@ export default function DashboardHome() {
 
   const data = [
     {
-      year: stateData?.graphData[0].year,
-      anc: stateData?.graphData[0]?.data[0]?.value,
-      stunting: stateData?.graphData[0]?.data[1]?.value,
-      zeroDose: stateData?.graphData[0]?.data[2]?.value,
+      year: stateData?.graph_data[0].year,
+      anc: stateData?.graph_data[0]?.data[0]?.value,
+      stunting: stateData?.graph_data[0]?.data[1]?.value,
+      zeroDose: stateData?.graph_data[0]?.data[2]?.value,
     },
     {
-      year: stateData?.graphData[1].year,
-      anc: stateData?.graphData[1]?.data[0]?.value,
-      stunting: stateData?.graphData[1]?.data[1]?.value,
-      zeroDose: stateData?.graphData[1]?.data[2]?.value,
+      year: stateData?.graph_data[1].year,
+      anc: stateData?.graph_data[1]?.data[0]?.value,
+      stunting: stateData?.graph_data[1]?.data[1]?.value,
+      zeroDose: stateData?.graph_data[1]?.data[2]?.value,
     },
     {
-      year: stateData?.graphData[2]?.year,
-      anc: stateData?.graphData[2]?.data[0]?.value,
-      stunting: stateData?.graphData[2]?.data[1]?.value,
-      zeroDose: stateData?.graphData[2]?.data[2]?.value,
+      year: stateData?.graph_data[2]?.year,
+      anc: stateData?.graph_data[2]?.data[0]?.value,
+      stunting: stateData?.graph_data[2]?.data[1]?.value,
+      zeroDose: stateData?.graph_data[2]?.data[2]?.value,
     },
   ];
 
@@ -102,7 +243,7 @@ export default function DashboardHome() {
           />
           <DemographyCard
             title="Health Facility"
-            subtitle={formatNumber(stateData?.healthFacilities || "N/A") as any}
+            subtitle={formatNumber(stateData?.health_facilities || "N/A") as any}
             icon={<FaMapMarked size={24} color="#16a34a" />}
           />
           <DemographyCard
@@ -134,11 +275,19 @@ export default function DashboardHome() {
             data={data}
             lines={lines}
           />
-          <MapView
+          {/* <MapView
             mapClassName={`h-96 w-full rounded-xl shadow`}
             showCard={true}
             total={stateData?.demography_LGA.length || "N/A"}
             h2r={stateData?.totalHardToReach || "N/A"}
+          /> */}
+
+          <MapView
+            mapClassName={`h-96 w-full rounded-xl shadow`}
+            showCard={true}
+            geojson={mapGeo}
+            total={stateData?.demography_LGA?.length}
+            h2r={stateData?.total_Hard_To_Reach}
           />
         </div>
       </div>

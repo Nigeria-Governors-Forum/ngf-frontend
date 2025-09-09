@@ -49,7 +49,13 @@ const Topbar: React.FC<TopbarProps> = ({
     setTopBarTitle(
       pathname === "/dashboard"
         ? `Dashboard ${onYearChange ? ` - ${selectedYear}` : ""}`
-        : title
+        : pathname === "/dashboard/demography"
+          ? `Demography ${onYearChange ? ` - ${selectedYear}` : ""}`
+          : pathname === "/dashboard/health-facilities"
+            ? `Health Facilities ${onYearChange ? ` - ${selectedYear}` : ""}`
+            : pathname === "/dashboard/zonal-health-facilities"
+              ? `Zonal Health Facilities ${onYearChange ? ` - ${selectedYear}` : ""}`
+              : title
     );
   }, [selectedYear, pathname, title, onYearChange]);
 

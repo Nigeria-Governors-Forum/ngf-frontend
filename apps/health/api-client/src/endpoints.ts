@@ -7,6 +7,9 @@ export const Endpoints = {
   dashboard: {
     summary: "/dashboard",
   },
+  demography: {
+    summary: "/demography",
+  },
   users: {
     list: "/user",
     email: (id: string) => `/user/${id}`,

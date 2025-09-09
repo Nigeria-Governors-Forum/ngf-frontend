@@ -1,11 +1,12 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { MapViewProps } from './MapView';
+// import { MapViewProps } from './MapView';
+import { MappViewProps } from './Mapp';
 
 const MapView = dynamic(() =>
-  import('./MapView').then((mod) => mod.MapView),
+  import('./Mapp').then((mod) => mod.MappView),
   { ssr: false }
-) as React.ComponentType<MapViewProps>;
+) as React.ComponentType<MappViewProps>;
 
 export default MapView;

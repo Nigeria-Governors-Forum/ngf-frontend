@@ -7,7 +7,6 @@ import L, { LatLngExpression } from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import { useState } from "react";
 import ToggleSwitch from "./ToggleSwitch";
 
 // Fix the default icon issue
@@ -41,6 +40,7 @@ export const MapView: React.FC<MapViewProps> = ({
   safe = total - h2r,
   onToggle,
 }) => {
+
   return (
     <div className="relative w-full">
       {showCard && (
