@@ -16,7 +16,7 @@ const ZoneHealthCard: React.FC<SelectCardProps> = ({
   defaultValue = "",
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-md p-4">
+    <div className="bg-white rounded-xl p-4">
       <h2 className="text-lg font-semibold text-green-800 mb-3 text-center">
         {title}
       </h2>

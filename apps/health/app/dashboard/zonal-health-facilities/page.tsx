@@ -3,16 +3,12 @@
 import React, { useEffect, useState } from "react";
 import MapView from "../../components/MapWrapper";
 import ZoneHealthCard from "../../components/ZoneHealthCard";
-import ComparisonBarChart from "@repo/ui/barchart";
-import {
-  getAllZones,
-  getZoneData,
-  getZoneByState,
-} from "nigerian-geopolitical-zones";
+import { getZoneByState } from "nigerian-geopolitical-zones";
 import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
 import { Endpoints, httpClient } from "../../../api-client/src";
 import toast from "react-hot-toast";
 import LoadingScreen from "@repo/ui/loadingScreen";
+import StateBarChart from "../../components/StateBarChart";
 
 const ZonalHealthFacility = () => {
   const [loading, setLoading] = useState(false);
@@ -23,15 +19,18 @@ const ZonalHealthFacility = () => {
   const fetchData = async () => {
     if (!selectedState || !selectedYear) return;
     setLoading(true);
-    if (selectedState === "Federal Capital Territory") setSelectedState("FCT");
-    if (selectedState === "Nassarawa") setSelectedState("Nasarawa");
+    const stateParam =
+      selectedState === "Federal Capital Territory"
+        ? "FCT"
+        : selectedState === "Nassarawa"
+          ? "Nasarawa"
+          : selectedState;
     try {
       const stats = await httpClient.get(
-        `${Endpoints.healthFacilities.zone}/${selectedZone}/${selectedYear}`
+        `${Endpoints.healthFacilities.zone}/${selectedZone}/${stateParam}/${selectedYear}`
       );
       console.log(stats);
-      setStateData(stats.data);
-      toast.success(`Data found, ${selectedState} - ${selectedYear}!`);
+      setStateData(stats?.data);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Invalid Credentials");
@@ -43,97 +42,55 @@ const ZonalHealthFacility = () => {
   useEffect(() => {
     const zoneArea = getZoneByState(selectedState.toLocaleLowerCase());
     setSelectedZone(zoneArea?.zone.toLocaleLowerCase());
-
-    console.log(selectedZone);
-
     fetchData();
-  }, [selectedZone, selectedState]);
+  }, [selectedZone, selectedState, selectedYear]);
 
-  const sampleData = [
-    { name: "2020", actual: 120000, budgeted: 140000 },
-    // { name: "2021", actual: 90000, budgeted: 85000 },
-    { name: "2022", actual: 150000, budgeted: 160000 },
-    // { name: "2023", actual: 120000, budgeted: 140000 },
-    // { name: "2024", actual: 150000, budgeted: 160000 },
-  ];
+  const sampleData = stateData?.zoneWithin;
 
   return (
     <>
       {loading && <LoadingScreen text="Please wait..." />}
-      <div className="flex flex-col gap-6">
-        {/* Filters Row */}
-        <div className="flex flex-wrap gap-4 justify-between ">
-          <ZoneHealthCard
-            title="Zone"
-            options={[
-              { value: "north west", label: "North West" },
-              { value: "north central", label: "North Central" },
-              { value: "north east", label: "North East" },
-              { value: "south west", label: "South West" },
-              { value: "south east", label: "South East" },
-              { value: "south south", label: "South South" },
-            ]}
-            onChange={(value) => {
-              setSelectedZone(value);
-              console.log("Selected zone:", value);
-            }}
-            defaultValue={selectedZone}
-          />
+      <div className="min-h-screen space-y-6">
+        {/* Main 2-column layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left side: zone selector + bar chart */}
+          <div className="flex flex-col gap-6">
+            {/* Zone filter card */}
+            <div className="bg-white rounded-2xl shadow p-4">
+              <ZoneHealthCard
+                title="Geopolitical Zone"
+                options={[
+                  { value: "north west", label: "North West" },
+                  { value: "north central", label: "North Central" },
+                  { value: "north east", label: "North East" },
+                  { value: "south west", label: "South West" },
+                  { value: "south east", label: "South East" },
+                  { value: "south south", label: "South South" },
+                ]}
+                onChange={(value) => {
+                  setSelectedZone(value);
+                  console.log("Selected zone:", value);
+                }}
+                defaultValue={selectedZone}
+              />
+            </div>
 
-          {/* <ZoneHealthCard
-          title="State"
-          options={[
-            { value: "North West", label: "North West" },
-            { value: "North Central", label: "North Central" },
-            { value: "South West", label: "South West" },
-            { value: "South East", label: "South East" },
-          ]}
-          onChange={(value) => {
-            setSelectedState(value);
-            console.log("Selected state:", value);
-          }}
-          defaultValue={selectedState}
-        /> */}
+            {/* Bar chart */}
+            <StateBarChart
+              title="Zonal Comparison"
+              data={sampleData}
+              className="bg-white rounded-2xl shadow p-4 h-[500px]"
+            />
+          </div>
 
-          {/* <div className="bg-white rounded-xl shadow-md p-4">
-          <h2 className="text-lg font-semibold text-green-800 mb-3 text-center">
-            {title}
-          </h2>
-          <label htmlFor={`select-${title}`} className="text-black pr-5">
-            Select a {title}
-          </label>
-          <select
-            id={`select-${title}`}
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="px-3 py-1 border rounded-md border-green-400 bg-white text-green-700"
-          >
-            <option value="">Select...</option>
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div> */}
-        </div>
-
-        {/* Main Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ComparisonBarChart
-            title="Health Expenditure Trend"
-            data={sampleData}
-            currencySymbol="₦"
-            actualColor="#2563EB"
-            budgetColor="#10B981"
-            className="ui:bg-white ui:rounded-2xl ui:shadow ui:p-4"
-          />
-
-          <MapView
-            mapClassName="h-96 w-full rounded-xl shadow"
-            showCard={true}
-            title="National Comparison"
-          />
+          {/* Right side: map */}
+          <div className="bg-white rounded-2xl shadow p-4">
+            <MapView
+              mapClassName="h-[600px] w-full rounded-xl shadow"
+              showCard={true}
+              title="National Comparison"
+            />
+          </div>
         </div>
       </div>
     </>
