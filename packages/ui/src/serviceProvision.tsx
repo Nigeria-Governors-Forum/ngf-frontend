@@ -16,14 +16,15 @@ export interface StateValue {
   color?: string; // optional override
   budget?: number;
   id?: number;
-  indicator?: string;
-  lga?: string;
-  per_capita?: number;
-  population?: number;
+  number?: string;
+  page?: string;
+  percentage?: number;
+  service_provision?: number;
   state?: string;
   year?: number;
   zone?: string;
 }
+
 export interface HorizontalStateBarChartProps {
   data: StateValue[]; // sorted descending if desired
   title?: string;
@@ -34,28 +35,35 @@ export interface HorizontalStateBarChartProps {
   showValueSuffix?: string; // e.g. "T" or ""
 }
 
-const defaultColors = ["#2563EB", "#10B981", "#6366F1", "#F59E0B", "#EF4444"];
+// const defaultColors = ["#2563EB", "#10B981", "#6366F1", "#F59E0B", "#EF4444"];
+const defaultColors = ["#2563EB"];
 
 const formatCurrency = (val: number, symbol = "₦") =>
-  symbol +
-  val
-    .toFixed(0)
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  symbol + val.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-const TooltipContent: React.FC<any> = ({ active, payload, label, currencySymbol, suffix }) => {
+const TooltipContent: React.FC<any> = ({
+  active,
+  payload,
+  label,
+  currencySymbol,
+  suffix,
+}) => {
   if (!active || !payload || !payload.length) return null;
   const entry = payload[0].payload as StateValue;
   return (
     <div className="ui:bg-black ui:shadow ui:rounded ui:p-2 ui:text-sm ui:border ui:border-gray-200">
-      <div className="ui:font-semibold ui:mb-1">{entry.indicator}</div>
+      <div className="ui:font-semibold ui:mb-1">{entry.service_provision}</div>
       <div>
-        {formatCurrency(Number(entry.population), currencySymbol)}{suffix}
+        {formatCurrency(Number(entry.percentage) * 100, currencySymbol)}
+        {suffix}
       </div>
     </div>
   );
 };
 
-const HorizontalStateBarChart: React.FC<HorizontalStateBarChartProps> = ({
+const HorizontalServiceProvisionBarChart: React.FC<
+  HorizontalStateBarChartProps
+> = ({
   data,
   title,
   currencySymbol = "₦",
@@ -63,9 +71,11 @@ const HorizontalStateBarChart: React.FC<HorizontalStateBarChartProps> = ({
   barColor = "#2563EB",
   max,
   showValueSuffix = "",
-}) => {  
+}) => {
   const effectiveMax =
-    max && max > 0 ? max : Math.max(...data.map((d) => Number(d.population)), 0);
+    max && max > 0
+      ? max
+      : Math.max(...data.map((d) => Number(d.percentage)));
 
   return (
     <div className={className}>
@@ -84,11 +94,11 @@ const HorizontalStateBarChart: React.FC<HorizontalStateBarChartProps> = ({
           >
             <XAxis
               type="number"
-              domain={[0, Math.ceil(effectiveMax * 1.05)]}
+              domain={[0, Math.ceil(effectiveMax * 0.6)]}
               hide
             />
             <YAxis
-              dataKey="lga"
+              dataKey="service_provision"
               type="category"
               width={120}
               tick={{ fontSize: 14, fontWeight: 600 }}
@@ -107,20 +117,26 @@ const HorizontalStateBarChart: React.FC<HorizontalStateBarChartProps> = ({
               wrapperStyle={{ outline: "none" }}
             />
             <Bar
-              dataKey="per_capita"
+              dataKey="percentage"
               isAnimationActive={false}
               maxBarSize={24}
               background={{ fill: "#f3f4f6" }}
               // label={{ position: "right", formatter: (v: any) => `${formatCurrency(v, currencySymbol)}${showValueSuffix}` }}
             >
               {data.map((entry, idx) => {
-                const color = entry.color || defaultColors[idx % defaultColors.length] || barColor;
-                return <Cell key={entry.indicator} fill={color} />;
+                const color =
+                  entry.color ||
+                  defaultColors[idx % defaultColors.length] ||
+                  barColor;
+                return <Cell key={entry.service_provision} fill={color} />;
               })}
               <LabelList
-                dataKey="population"
+                dataKey="percentage"
                 position="right"
-                formatter={(v: any) => `${formatCurrency(v, currencySymbol)}${showValueSuffix}`}
+                formatter={(v: any) =>
+                  `${formatCurrency(v* 100, currencySymbol)}${showValueSuffix}`
+                }
+                // formatter={(v: any) => `${v.toFixed(2)}%`}
                 style={{ fill: "#1f2d3a", fontWeight: 600, fontSize: 12 }}
               />
             </Bar>
@@ -131,4 +147,4 @@ const HorizontalStateBarChart: React.FC<HorizontalStateBarChartProps> = ({
   );
 };
 
-export default HorizontalStateBarChart;
+export default HorizontalServiceProvisionBarChart;

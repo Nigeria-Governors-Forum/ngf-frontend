@@ -10,6 +10,10 @@ export const Endpoints = {
   demography: {
     summary: "/demography",
   },
+  healthFacilities: {
+    summary: "/health-facilities",
+    zone: "/health-facilities/zonal",
+  },
   users: {
     list: "/user",
     email: (id: string) => `/user/${id}`,

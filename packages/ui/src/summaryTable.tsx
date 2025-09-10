@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
+import { formatNumber } from "./hooks/TopbarFiltersContext";
 
 export type Status = "safe" | "normal" | "hard" | "unknown";
 
 export interface SummaryRow {
-  lga: string;
-  population?: string; // you can also use number and format outside
-  healthFacilities?: number | string;
-  politicalWards?: number | string;
+  name: string;
+  private?: number; // you can also use number and format outside
+  public?: number | string;
+  total?: number | string;
   status?: Status; // determines background accent
 }
 
@@ -99,7 +100,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
               const style = styles[status];
               return (
                 <tr
-                  key={`${row.lga}-${i}`}
+                  key={i}
                   className={`ui:border-t ui:border-green-700 ${
                     status === "hard"
                       ? "ui:bg-red-400" // you can also emphasize full row
@@ -113,7 +114,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                       {/* colored pill for status */}
                       <span
                         className={`ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ${
-                          status === "safe"
+                          row.name === "Total"
                             ? "ui:bg-green-600"
                             : status === "hard"
                               ? "ui:bg-red-600"
@@ -122,17 +123,17 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                                 : "ui:bg-gray-200"
                         }`}
                       />
-                      <span>{row.lga}</span>
+                      <span>{row.name}</span>
                     </div>
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
-                    {row.population}
+                    {row?.private}
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
-                    {row.healthFacilities}
+                    {row.public}
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
-                    {row.politicalWards}
+                    {formatNumber(Number(row.total)) || "N/A"}
                   </td>
                 </tr>
               );

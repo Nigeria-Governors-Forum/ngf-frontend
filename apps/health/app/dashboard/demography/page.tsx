@@ -16,17 +16,16 @@ const DemographyPage = () => {
   const [stateData, setStateData] = useState<any>();
   const { selectedState, selectedYear, setSelectedState } = useTopbarFilters();
 
-  console.log(selectedState, selectedYear);
-
   const fetchData = async () => {
     if (!selectedState || !selectedYear) return;
     setLoading(true);
     if (selectedState === "Federal Capital Territory") setSelectedState("FCT");
+    if (selectedState === "Nassarawa") setSelectedState("Nasarawa");
+
     try {
       const stats = await httpClient.get(
         `${Endpoints.demography.summary}/${selectedState}/${selectedYear}`
       );
-      // console.log(stats);
       setStateData(stats?.data);
       toast.success(`Record Found for, ${selectedState} - ${selectedYear}!`);
     } catch (error) {
@@ -44,7 +43,6 @@ const DemographyPage = () => {
   const data: LgaLookup[] = Array.isArray(stateData?.demography_LGA)
     ? stateData.demography_LGA
     : [];
-;
   return (
     <>
       {loading && <LoadingScreen text="Please wait..." />}
@@ -52,7 +50,7 @@ const DemographyPage = () => {
         {/* Left: takes 2x space */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <DemographyCard
-            title="Year created"
+            title="Year Created"
             subtitle={stateData?.year_created || "N/A"}
           />
           <DemographyCard
@@ -62,11 +60,11 @@ const DemographyPage = () => {
             }
           />
           <DemographyCard
-            title="Land mass"
+            title="Land Mass"
             subtitle={formatNumber(Number(stateData?.land_mass)) || "N/A"}
           />
           <DemographyCard
-            title="Under 1 pop"
+            title="Under 1 Popn"
             subtitle={formatNumber(Number(stateData?.under_1)) || "N/A"}
           />
           <DemographyCard
@@ -74,11 +72,11 @@ const DemographyPage = () => {
             subtitle={formatNumber(Number(stateData?.no_of_lgas)) || "N/A"}
           />
           <DemographyCard
-            title="Under 5 pop"
+            title="Under 5 Popn"
             subtitle={formatNumber(Number(stateData?.under_5)) || "N/A"}
           />
           <DemographyCard
-            title="Political ward"
+            title="Political Wards"
             subtitle={formatNumber(Number(stateData?.political_wards)) || "N/A"}
           />
           <DemographyCard
@@ -92,13 +90,12 @@ const DemographyPage = () => {
             }
           />
           <DemographyCard
-            title="Pregnant women "
+            title="Pregnant Women"
             subtitle={formatNumber(Number(stateData?.pregnant_women)) || "N/A"}
             icon={<FaMoneyCheck size={24} color="#16a34a" />}
           />
         </div>
 
-        {/* Center: single card */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <MapView
             mapClassName={`h-96 w-full rounded-xl shadow`}

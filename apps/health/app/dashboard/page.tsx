@@ -10,7 +10,6 @@ import { Endpoints, httpClient } from "../../api-client/src";
 import toast from "react-hot-toast";
 import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
 import LoadingScreen from "@repo/ui/loadingScreen";
-import dynamic from "next/dynamic";
 import MapView from "../components/MapWrapper";
 
 export const formatNumber = (num: number): string => {
@@ -51,7 +50,7 @@ export default function DashboardHome() {
             "🔎 Example feature properties:",
             json.features[0].properties
           );
-        } 
+        }
         // if Topology, convert to GeoJSON (take the first object)
         if (json?.type === "Topology") {
           const topojson = await import("topojson-client");
@@ -166,12 +165,15 @@ export default function DashboardHome() {
     if (!selectedState || !selectedYear) return;
     setLoading(true);
     if (selectedState === "Federal Capital Territory") setSelectedState("FCT");
+    if (selectedState === "Nassarawa") setSelectedState("Nasarawa");
+
     try {
       const stats = await httpClient.get(
         `${Endpoints.dashboard.summary}/${selectedState}/${selectedYear}`
       );
       console.log(stats);
       setStateData(stats.data);
+
       toast.success(`Welcome, ${selectedState} - ${selectedYear}!`);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -197,21 +199,39 @@ export default function DashboardHome() {
   const data = [
     {
       year: stateData?.graph_data[0].year,
-      anc: stateData?.graph_data[0]?.data[0]?.value,
-      stunting: stateData?.graph_data[0]?.data[1]?.value,
-      zeroDose: stateData?.graph_data[0]?.data[2]?.value,
+      anc: parseFloat(
+        Number(stateData?.graph_data[0]?.data[0]?.value * 100).toFixed(1)
+      ),
+      stunting: parseFloat(
+        Number(stateData?.graph_data[0]?.data[2]?.value * 100).toFixed(1)
+      ),
+      zeroDose: parseFloat(
+        Number(stateData?.graph_data[0]?.data[3]?.value * 100).toFixed(1)
+      ),
     },
     {
       year: stateData?.graph_data[1].year,
-      anc: stateData?.graph_data[1]?.data[0]?.value,
-      stunting: stateData?.graph_data[1]?.data[1]?.value,
-      zeroDose: stateData?.graph_data[1]?.data[2]?.value,
+      anc: parseFloat(
+        Number(stateData?.graph_data[1]?.data[0]?.value * 100).toFixed(1)
+      ),
+      stunting: parseFloat(
+        Number(stateData?.graph_data[1]?.data[2]?.value * 100).toFixed(1)
+      ),
+      zeroDose: parseFloat(
+        Number(stateData?.graph_data[1]?.data[3]?.value * 100).toFixed(1)
+      ),
     },
     {
       year: stateData?.graph_data[2]?.year,
-      anc: stateData?.graph_data[2]?.data[0]?.value,
-      stunting: stateData?.graph_data[2]?.data[1]?.value,
-      zeroDose: stateData?.graph_data[2]?.data[2]?.value,
+      anc: parseFloat(
+        Number(stateData?.graph_data[2]?.data[0]?.value * 100).toFixed(1)
+      ),
+      stunting: parseFloat(
+        Number(stateData?.graph_data[2]?.data[2]?.value * 100).toFixed(1)
+      ),
+      zeroDose: parseFloat(
+        Number(stateData?.graph_data[2]?.data[3]?.value * 100).toFixed(1)
+      ),
     },
   ];
 
@@ -243,7 +263,9 @@ export default function DashboardHome() {
           />
           <DemographyCard
             title="Health Facility"
-            subtitle={formatNumber(stateData?.health_facilities || "N/A") as any}
+            subtitle={
+              formatNumber(stateData?.health_facilities || "N/A") as any
+            }
             icon={<FaMapMarked size={24} color="#16a34a" />}
           />
           <DemographyCard

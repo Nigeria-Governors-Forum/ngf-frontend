@@ -54,7 +54,7 @@ const Topbar: React.FC<TopbarProps> = ({
           : pathname === "/dashboard/health-facilities"
             ? `Health Facilities ${onYearChange ? ` - ${selectedYear}` : ""}`
             : pathname === "/dashboard/zonal-health-facilities"
-              ? `Zonal Health Facilities ${onYearChange ? ` - ${selectedYear}` : ""}`
+              ? `Zonal and National View of Health Facilities per Capita`
               : title
     );
   }, [selectedYear, pathname, title, onYearChange]);

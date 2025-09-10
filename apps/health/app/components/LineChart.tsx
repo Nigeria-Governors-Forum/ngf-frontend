@@ -18,7 +18,7 @@ type LineChartProps = {
   lines: { key: string; name: string; color: string }[];
 };
 
-export default function MultiLineChart({ title, data, lines }: LineChartProps) {
+export default function MultiLineChart({ title, data, lines }: LineChartProps) {  
   return (
     <div className="bg-white shadow-md rounded-xl p-6 w-full">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">{title}</h2>

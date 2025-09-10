@@ -3,6 +3,10 @@
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
+
+export const formatNumber = (num: number): string => {
+  return num.toLocaleString("en-US");
+};
 interface TopbarFiltersContextType {
   selectedState: string;
   setSelectedState: (state: string) => void;
