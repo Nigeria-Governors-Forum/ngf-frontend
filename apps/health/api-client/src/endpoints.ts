@@ -1,3 +1,4 @@
+
 export const Endpoints = {
   auth: {
     login: "/user/login",
@@ -13,6 +14,9 @@ export const Endpoints = {
   healthFacilities: {
     summary: "/health-facilities",
     zone: "/health-facilities/zonal",
+  },
+  humanResource: {
+    summary: "/human-resource",
   },
   users: {
     list: "/user",

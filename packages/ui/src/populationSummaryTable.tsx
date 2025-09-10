@@ -2,76 +2,39 @@
 
 import React from "react";
 
-export type LgaStatus = "safe" | "normal" | "hard" | "unknown";
-
 export interface LgaRow {
+  id: number;
   occupation: string;
-  number?: string; // you can also use number and format outside
+  number?: string;
   density?: number | string;
   target?: number | string;
-  status?: LgaStatus; // determines background accent
+  institution?: string;
+  page?: string;
+  state?: string;
+  year?: number;
+  zone?: string;
 }
 
-export interface StatusStyle {
-  label: string;
-  bgClass: string;
-  textClass?: string;
-  borderClass?: string;
-}
-
-export interface PopulationSummaryTableProps {
+interface PopulationSummaryTableProps {
   title?: string;
   data: LgaRow[];
-  statusStyles?: Partial<Record<LgaStatus, StatusStyle>>;
 }
-
-/**
- * Default mapping:
- * - safe: green
- * - normal: light/white (no fill)
- * - hard: red
- * - unknown: gray
- */
-const defaultStatusStyles: Record<LgaStatus, StatusStyle> = {
-  safe: {
-    label: "Safe",
-    bgClass: "ui:bg-green-100",
-    textClass: "ui:text-black",
-    borderClass: "ui:border-green-700",
-  },
-  normal: {
-    label: "Normal",
-    bgClass: "ui:bg-white",
-    textClass: "ui:text-black",
-    borderClass: "ui:border-green-700",
-  },
-  hard: {
-    label: "Hard to Reach",
-    bgClass: "ui:bg-red-500 ui:text-white",
-    textClass: "ui:text-white",
-    borderClass: "ui:border-red-700",
-  },
-  unknown: {
-    label: "Unknown",
-    bgClass: "ui:bg-gray-200",
-    textClass: "ui:text-black",
-    borderClass: "ui:border-green-700",
-  },
-};
 
 const PopulationSummaryTable: React.FC<PopulationSummaryTableProps> = ({
   title = "Population by LGA",
   data,
-  statusStyles = {},
 }) => {
-  const styles = { ...defaultStatusStyles, ...statusStyles } as Record<
-    LgaStatus,
-    StatusStyle
-  >;
+  // helper to decide density color
+  const getDensityColor = (density?: number) => {
+    if (density === undefined || isNaN(density)) return "ui:bg-gray-200"; // unknown
+    if (density <= 0.5) return "ui:bg-red-500"; // critical
+    if (density < 5) return "ui:bg-white"; // warning
+    return "ui:bg-green-500"; // safe
+  };
 
   return (
     <div className="ui:max-w-full ui:bg-white ui:rounded-2xl ui:shadow-md ui:p-6 ui:text-black">
-      <h2 className="ui:text-2xl ui:font-bold ui:text-green-700 ui:mb-4">
+      <h2 className="ui:text-xl ui:font-bold ui:text-green-700 ui:mb-4">
         {title}
       </h2>
 
@@ -95,44 +58,35 @@ const PopulationSummaryTable: React.FC<PopulationSummaryTableProps> = ({
           </thead>
           <tbody>
             {data.map((row, i) => {
-              const status = row.status || "unknown";
-              const style = styles[status];
+              const densityVal = Number(row.density);
+              const densityColor = getDensityColor(densityVal);
+
               return (
                 <tr
                   key={`${row.occupation}-${i}`}
-                  className={`ui:border-t ui:border-green-700 ${
-                    status === "hard"
-                      ? "ui:bg-red-400" // you can also emphasize full row
-                      : ""
-                  }`}
+                  className="ui:border-t ui:border-green-700"
                 >
-                  <td
-                    className={`ui:px-4 ui:py-3 ui:font-medium ui:whitespace-nowrap ${style.textClass}`}
-                  >
+                  <td className="ui:px-4 ui:py-3 ui:font-medium ui:whitespace-nowrap">
                     <div className="ui:flex ui:items-center ui:gap-2">
-                      {/* colored pill for status */}
+                      {/* density pill */}
                       <span
-                        className={`ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ${
-                          status === "safe"
-                            ? "ui:bg-green-600"
-                            : status === "hard"
-                              ? "ui:bg-red-600"
-                              : status === "unknown"
-                                ? "ui:bg-gray-500"
-                                : "ui:bg-gray-200"
-                        }`}
+                        className={`ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ${densityColor}`}
                       />
-                      <span>{row.occupation}</span>
+                      <span>{row.institution}</span>
                     </div>
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
                     {row.number}
                   </td>
-                  <td className="ui:px-4 ui:py-3 ui:text-center">
-                    {row.density}
+                  <td
+                    className={`ui:px-4 ui:py-3 ui:text-center font-semibold ${densityColor}`}
+                  >
+                    {isNaN(densityVal)
+                      ? "N/A"
+                      : parseFloat(densityVal.toFixed(0))}
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
-                    {row.target}
+                    {row?.target || 15}
                   </td>
                 </tr>
               );
@@ -143,28 +97,22 @@ const PopulationSummaryTable: React.FC<PopulationSummaryTableProps> = ({
 
       {/* Legend */}
       <div className="ui:mt-6 ui:flex ui:gap-6 ui:flex-wrap">
-        {Object.entries(styles).map(([key, { label }]) => {
-          const statusKey = key as LgaStatus;
-          const pillColor =
-            statusKey === "safe"
-              ? "ui:bg-green-600"
-              : statusKey === "hard"
-                ? "ui:bg-red-600"
-                : statusKey === "unknown"
-                  ? "ui:bg-gray-500"
-                  : "ui:bg-gray-200";
-          return (
-            <div
-              key={key}
-              className="ui:flex ui:items-center ui:gap-2 ui:text-sm ui:font-medium"
-            >
-              <span
-                className={`ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ${pillColor}`}
-              />
-              <span>{label}</span>
-            </div>
-          );
-        })}
+        <div className="ui:flex ui:items-center ui:gap-2 ui:text-sm ui:font-medium">
+          <span className="ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ui:bg-red-500" />
+          <span>Critical (≤ 0)</span>
+        </div>
+        <div className="ui:flex ui:items-center ui:gap-2 ui:text-sm ui:font-medium">
+          <span className="ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ui:bg-yellow-400" />
+          <span>Low (&lt; 5)</span>
+        </div>
+        <div className="ui:flex ui:items-center ui:gap-2 ui:text-sm ui:font-medium">
+          <span className="ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ui:bg-green-500" />
+          <span>Safe (≥ 5)</span>
+        </div>
+        <div className="ui:flex ui:items-center ui:gap-2 ui:text-sm ui:font-medium">
+          <span className="ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ui:bg-gray-200" />
+          <span>Unknown</span>
+        </div>
       </div>
     </div>
   );

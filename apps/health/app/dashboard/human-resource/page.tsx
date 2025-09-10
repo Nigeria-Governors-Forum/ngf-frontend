@@ -1,11 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DemographyCard from "@repo/ui/demographyCard";
-import PopulationSummaryTable, { LgaRow } from "@repo/ui/populationSummaryTable";
-import SummaryTable, { SummaryRow } from "@repo/ui/summaryTable";
-import { FaMoneyCheck } from "react-icons/fa";
+import PopulationSummaryTable, {
+  LgaRow,
+} from "@repo/ui/populationSummaryTable";
+import { FaHospital, FaMoneyCheck, FaUserNurse } from "react-icons/fa";
 import MapView from "../../components/MapWrapper";
+import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
+import toast from "react-hot-toast";
+import { Endpoints, httpClient } from "../../../api-client/src";
+import LoadingScreen from "@repo/ui/loadingScreen";
+import { formatNumber } from "../page";
+import HealthCard, { SummaryRow } from "../../components/HealthCard";
 
 interface HumanResourcePageProps {
   state?: string;
@@ -14,14 +21,10 @@ interface HumanResourcePageProps {
   perPerson?: string | number;
 }
 
-const HumanResource: React.FC<HumanResourcePageProps> = ({
-  state = "Akwa Ibom",
-  title = "Year",
-}) => {
-  const [selectedZone, setSelectedZone] = useState("");
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const years = Array.from({ length: 10 }, (_, i) => 2025 - i);
+const HumanResource = () => {
+  const [loading, setLoading] = useState(false);
+  const { selectedState, selectedYear } = useTopbarFilters();
+  const [stateData, setStateData] = useState<any>();
 
   const sampleData = [
     { name: "2020", actual: 120000, budgeted: 140000 },
@@ -31,119 +34,80 @@ const HumanResource: React.FC<HumanResourcePageProps> = ({
     { name: "2024", actual: 150000, budgeted: 160000 },
   ];
 
-  const data: SummaryRow[] = [
-    {
-      lga: "Primary",
-      population: "141",
-      healthFacilities: 517,
-      politicalWards: 658,
-    },
-    {
-      lga: "Secondary",
-      population: "44",
-      healthFacilities: 14,
-      politicalWards: 58,
-    },
-    {
-      lga: "Tertiary",
-      population: "0",
-      healthFacilities: 3,
-      politicalWards: 3,
-    },
-    {
-      lga: "Total",
-      population: "185",
-      healthFacilities: 534,
-      politicalWards: 719,
-    },
-  ];
-    const dataTwo: LgaRow[] = [
-      {
-        occupation: "Akoko South East",
-        number: "136,238",
-        density: 24,
-        target: 11,
-        status: "hard",
-      },
-      {
-        occupation: "Akoko North East",
-        number: "289,924",
-        density: 32,
-        target: 13,
-        status: "normal",
-      },
-      {
-        occupation: "Akure South",
-        number: "583,804",
-        density: 38,
-        target: 11,
-        status: "safe",
-      },
-      {
-        occupation: "Akoko North East",
-        number: "289,924",
-        density: 32,
-        target: 13,
-        status: "normal",
-      },
-      {
-        occupation: "Akure South",
-        number: "583,804",
-        density: 38,
-        target: 11,
-        status: "safe",
-      },
-      {
-        occupation: "Akoko North East",
-        number: "289,924",
-        density: 32,
-        target: 13,
-        status: "normal",
-      },
-      {
-        occupation: "Akure South",
-        number: "583,804",
-        density: 38,
-        target: 11,
-        status: "safe",
-      },
-      // ...
-    ];
+  const data: SummaryRow[] = stateData?.training_breakdown || [];
+  const dataTwo: LgaRow[] = stateData?.profession || [];
 
-return (
-  <div className="flex flex-col gap-6">
-    {/* Top Section */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <DemographyCard
-        title="Total Health Worker"
-        subtitle="1,979"
-        icon={<FaMoneyCheck size={24} color="#16a34a" />}
-      />
-      <DemographyCard
-        title="Total Health Training Institution"
-        subtitle="1,979"
-        icon={<FaMoneyCheck size={24} color="#16a34a" />}
-      />
-      <SummaryTable title="Health Facility Summary" data={data} />
-    </div>
+  const fetchData = async () => {
+    if (!selectedState || !selectedYear) return;
+    setLoading(true);
 
-    {/* Middle Section */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <PopulationSummaryTable title="Population by LGA" data={dataTwo} />
+    const stateParam =
+      selectedState === "Federal Capital Territory"
+        ? "FCT"
+        : selectedState === "Nassarawa"
+          ? "Nasarawa"
+          : selectedState;
 
-      {/* Map spans 2 columns */}
-      <div className="md:col-span-2">
-        <MapView
-          mapClassName="h-96 w-full rounded-xl shadow"
-          showCard={true}
-          title="National Comparison"
-        />
+    try {
+      const stats = await httpClient.get(
+        `${Endpoints.humanResource.summary}/${stateParam}/${selectedYear}`
+      );
+      console.log(stats);
+      setStateData(stats?.data);
+
+      toast.success(`Welcome, ${selectedState} - ${selectedYear}!`);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast.error("Invalid Credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedState, selectedYear]);
+
+  return (
+    <>
+      {loading && <LoadingScreen text="Please wait..." />}
+
+      <div className="flex flex-col gap-6">
+        {/* Top Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <DemographyCard
+            title="Total Health Worker"
+            subtitle={formatNumber(Number(stateData?.hRH_Professions)) || "N/A"}
+            icon={<FaUserNurse size={24} color="#16a34a" />}
+          />
+          <DemographyCard
+            title="Total Health Training Institution"
+            subtitle={formatNumber(Number(stateData?.hRH)) || "N/A"}
+            icon={<FaHospital size={24} color="#16a34a" />}
+          />
+          <HealthCard
+            title="Health Training Institutions Breakdown"
+            data={data}
+          />
+        </div>
+
+        {/* Middle Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2">
+            <PopulationSummaryTable title="Human Resource" data={dataTwo} />
+          </div>
+          {/* Map spans 2 columns */}
+          <div className="md:col-span-1">
+            <MapView
+              mapClassName="h-96 w-full rounded-xl shadow"
+              showCard={true}
+              title="HRH Breakdown by LGA"
+            />
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-);
-
-
+    </>
+  );
 };
 
 export default HumanResource;

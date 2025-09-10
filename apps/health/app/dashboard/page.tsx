@@ -18,7 +18,7 @@ export const formatNumber = (num: number): string => {
 
 export default function DashboardHome() {
   const [loading, setLoading] = useState(false);
-  const { selectedState, selectedYear, setSelectedState } = useTopbarFilters();
+  const { selectedState, selectedYear } = useTopbarFilters();
   const [stateData, setStateData] = useState<any>();
 
   const [rawTopoOrGeo, setRawTopoOrGeo] = useState<any>(null);
@@ -164,12 +164,17 @@ export default function DashboardHome() {
   const fetchData = async () => {
     if (!selectedState || !selectedYear) return;
     setLoading(true);
-    if (selectedState === "Federal Capital Territory") setSelectedState("FCT");
-    if (selectedState === "Nassarawa") setSelectedState("Nasarawa");
+
+    const stateParam =
+      selectedState === "Federal Capital Territory"
+        ? "FCT"
+        : selectedState === "Nassarawa"
+          ? "Nasarawa"
+          : selectedState;
 
     try {
       const stats = await httpClient.get(
-        `${Endpoints.dashboard.summary}/${selectedState}/${selectedYear}`
+        `${Endpoints.dashboard.summary}/${stateParam}/${selectedYear}`
       );
       console.log(stats);
       setStateData(stats.data);
