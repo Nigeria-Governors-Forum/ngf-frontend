@@ -57,6 +57,8 @@ const Topbar: React.FC<TopbarProps> = ({
               ? `Zonal and National View of Health Facilities per Capita`
               : pathname === "/dashboard/human-resource"
                 ? `${selectedState} State Human Resource for Health Overview`
+                : pathname ==="/dashboard/score-card"
+                ? `NFG Scorecard`
                 : title
     );
   }, [selectedYear, pathname, title, onYearChange]);

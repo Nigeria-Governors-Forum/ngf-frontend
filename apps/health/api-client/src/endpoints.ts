@@ -18,6 +18,12 @@ export const Endpoints = {
   humanResource: {
     summary: "/human-resource",
   },
+  scorecard: {
+    summary: "/scorecard",
+  },
+  healthFinance: {
+    summary: "/health-finance",
+  },
   users: {
     list: "/user",
     email: (id: string) => `/user/${id}`,

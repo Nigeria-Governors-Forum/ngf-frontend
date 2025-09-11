@@ -15,27 +15,28 @@ export interface StatusMapping {
   blank: StatusMappingEntry;
 }
 
-export interface TableColumn {
-  key: string;  // property name in data
-  label: string; // column label
-  type?: "status" | "text";
-}
-
-export interface ScorecardRow {
-  [key: string]: string | undefined;
+export interface ScorecardItem {
+  id: number;
+  zone?: string;
+  state?: string;
+  name?: string;
+  round?: string;
+  year?: number;
+  indicator?: string;
+  status?: string;
+  value?: number;
 }
 
 export interface ScorecardTableProps {
   title: string;
-  columns?: TableColumn[];
-  data: ScorecardRow[];
+  data: Record<string, ScorecardItem[]>; // { Abia: [...], Adamawa: [...] }
   statusMapping?: StatusMapping;
 }
 
 const defaultStatusMapping: StatusMapping = {
   yes: { label: "Yes", colorClass: "ui:bg-green-600" },
   no: { label: "No", colorClass: "ui:bg-red-500" },
-  blank: { label: "No Data", colorClass: "ui:bg-black" },
+  blank: { label: "No Data", colorClass: "ui:bg-gray-400" },
 };
 
 interface StatusCircleProps {
@@ -48,7 +49,11 @@ const StatusCircle: React.FC<StatusCircleProps> = ({
   mapping = defaultStatusMapping,
 }) => {
   const key: StatusKey =
-    status === "Yes" ? "yes" : status === "No" ? "no" : "blank";
+    status?.toLowerCase() === "yes"
+      ? "yes"
+      : status?.toLowerCase() === "no"
+      ? "no"
+      : "blank";
   const { label, colorClass } = mapping[key];
 
   return (
@@ -61,33 +66,52 @@ const StatusCircle: React.FC<StatusCircleProps> = ({
   );
 };
 
-const ScorecardTable: React.FC<ScorecardTableProps> = ({
+const NationalScorecardTable: React.FC<ScorecardTableProps> = ({
   title,
-  columns,
   data,
   statusMapping = defaultStatusMapping,
 }) => {
-  // Default columns if not provided
-  const defaultSingleCols: TableColumn[] = [
-    { key: "indicator", label: "Indicator", type: "text" },
-    { key: "status", label: "Status", type: "status" },
+  // 1) collect all unique indicators from the data
+  const uniqueIndicators = Array.from(
+    new Set(
+      Object.values(data).flatMap((records) =>
+        records.map((r) => r.indicator?.trim())
+      )
+    )
+  ).filter(Boolean) as string[];
+
+  // 2) define columns: first column is "State", rest are indicators
+  const columns = [
+    { key: "state", label: "State", type: "text" as const },
+    ...uniqueIndicators.map((indicator) => ({
+      key: indicator.replace(/\s+/g, "_").toLowerCase(), // normalized key
+      label: indicator,
+      type: "status" as const,
+    })),
   ];
 
-
-  const finalColumns = columns || defaultSingleCols ;
+  // 3) transform rows: map indicator → status
+  const rows = Object.entries(data).map(([state, records]) => {
+    const row: Record<string, any> = { state };
+    records.forEach((r) => {
+      const key = r.indicator?.trim().replace(/\s+/g, "_").toLowerCase();
+      if (key) row[key] = r.status;
+    });
+    return row;
+  });
 
   return (
-    <div className="ui:max-w-full ui:bg-white ui:rounded-2xl ui:shadow-md ui:p-4 ui:text-black ui:overflow-hidden" >
+    <div className="ui:max-w-full ui:bg-white ui:rounded-2xl ui:shadow-md ui:p-4 ui:text-black">
       <h2 className="ui:text-lg ui:font-bold ui:mb-4 ui:capitalize">{title}</h2>
 
-      <div className="ui:overflow-x-auto">
-        <table className="ui:min-w-full ui:border-collapse">
+      <div className="ui:overflow-x-auto ui:max-w-full">
+        <table className="ui:min-w-[600px] ui:w-full ui:border-collapse">
           <thead>
             <tr className="ui:bg-green-800 ui:text-white">
-              {finalColumns.map((col) => (
+              {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="ui:px-4 ui:py-3 ui:text-left ui:font-semibold ui:whitespace-nowrap"
+                  className="ui:px-4 ui:py-3 ui:text-left ui:font-semibold"
                 >
                   {col.label}
                 </th>
@@ -95,15 +119,15 @@ const ScorecardTable: React.FC<ScorecardTableProps> = ({
             </tr>
           </thead>
           <tbody>
-            {data.map((row, idx) => (
+            {rows.map((row, idx) => (
               <tr
                 key={idx}
                 className="ui:even:bg-gray-100 ui:odd:bg-white ui:border-t ui:border-green-700"
               >
-                {finalColumns.map((col) => (
+                {columns.map((col) => (
                   <td
                     key={col.key}
-                    className="ui:px-4 ui:py-3 ui:whitespace-nowrap"
+                    className="ui:px-4 ui:py-3 ui:text-center ui:break-words"
                   >
                     {col.type === "status" ? (
                       <StatusCircle
@@ -111,7 +135,7 @@ const ScorecardTable: React.FC<ScorecardTableProps> = ({
                         mapping={statusMapping}
                       />
                     ) : (
-                      <span>{row[col.key]}</span>
+                      <span className="ui:font-medium">{row[col.key]}</span>
                     )}
                   </td>
                 ))}
@@ -122,7 +146,7 @@ const ScorecardTable: React.FC<ScorecardTableProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="ui:mt-6 ui:flex ui:gap-4 ui:justify-center ui:overflow-hidden">
+      <div className="ui:mt-6 ui:flex ui:gap-4 ui:justify-center">
         {Object.entries(statusMapping).map(([key, { label, colorClass }]) => (
           <div key={key} className="ui:flex ui:items-center ui:gap-2">
             <span
@@ -136,4 +160,4 @@ const ScorecardTable: React.FC<ScorecardTableProps> = ({
   );
 };
 
-export default ScorecardTable;
+export default NationalScorecardTable;

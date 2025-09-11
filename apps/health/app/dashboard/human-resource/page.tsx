@@ -26,14 +26,6 @@ const HumanResource = () => {
   const { selectedState, selectedYear } = useTopbarFilters();
   const [stateData, setStateData] = useState<any>();
 
-  const sampleData = [
-    { name: "2020", actual: 120000, budgeted: 140000 },
-    { name: "2021", actual: 90000, budgeted: 85000 },
-    { name: "2022", actual: 150000, budgeted: 160000 },
-    { name: "2023", actual: 120000, budgeted: 140000 },
-    { name: "2024", actual: 150000, budgeted: 160000 },
-  ];
-
   const data: SummaryRow[] = stateData?.training_breakdown || [];
   const dataTwo: LgaRow[] = stateData?.profession || [];
 

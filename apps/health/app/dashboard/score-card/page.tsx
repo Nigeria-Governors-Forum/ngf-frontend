@@ -1,196 +1,85 @@
 "use client";
-
+import React, { useEffect, useRef, useState } from "react";
 import ScorecardTable, { ScorecardRow } from "@repo/ui/scoreCard";
-import { useState } from "react";
+import NationalScorecardTable from "@repo/ui/nationalScoreCard";
+import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
+import LoadingScreen from "@repo/ui/loadingScreen";
+import toast from "react-hot-toast";
+import { Endpoints, httpClient } from "../../../api-client/src";
 
 interface ScoreCardProps {
   state: string;
 }
-const ScoreCard: React.FC<ScoreCardProps> = ({ state = "Akwa Ibom" }) => {
+const ScoreCard = () => {
+  const [loading, setLoading] = useState(false);
+  const { selectedState, selectedYear } = useTopbarFilters();
+  const [stateData, setStateData] = useState<any>("DMA");
+  const [selectedRound, setSelectedRound] = useState("");
+
   const categories = [
-    { value: "dma", label: "DMA" },
-    { value: "health_info", label: "Health Information" },
-    { value: "health_insurance", label: "Health Insurance" },
-    { value: "health_security", label: "Health Security" },
-    { value: "immunization", label: "Immunization" },
-    { value: "phccl", label: "PHCCL" },
+    { value: "DMA", label: "DMA" },
+    { value: "Health Information", label: "Health Information" },
+    { value: "Health Insurance", label: "Health Insurance" },
+    { value: "Health Security", label: "Health Security" },
+    { value: "Immunization", label: "Immunization" },
+    { value: "PHCLC", label: "PHCLC" },
+    { value: "Nutrition", label: "Nutrition" },
   ];
 
-  const columnTwo: ScorecardRow[] = [
-    { indicator: "60% Ward PHCs Capitalized", status: "no" },
-    { indicator: "DMA Established", status: "no" },
-    { indicator: "DMA Fully Capitalized", status: "no" },
-    { indicator: "Functional Warehousing System", status: "no" },
-    { indicator: "Single Supply Chain", status: "no" },
-    { indicator: "State owns Last Mile", status: "no" },
+  const round = [
+    { value: "", label: "Select" },
+    { value: "Round 1", label: "Round 1" },
+    { value: "Round 2", label: "Round 2" },
+    { value: "Round 3", label: "Round 3" },
   ];
 
-  const columns = [
-    { key: "state", label: "State" },
-    { key: "ward_phcs", label: "60% Ward PHCs Capitalized" },
-    { key: "dma_established", label: "DMA Established" },
-    { key: "dma_fully", label: "DMA Fully Capitalized" },
-    { key: "warehousing", label: "Functional Warehousing System" },
-    { key: "single_supply", label: "Single Supply Chain" },
-    { key: "last_mile", label: "State owns Last Mile" },
-  ];
-
-  const sampleData = [
-    {
-      state: "Akwa Ibom",
-      phc: "no",
-      dma: "no",
-      dmaCapita: "no",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "no",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    {
-      state: "Bauchi",
-      phc: "yes",
-      dma: "yes",
-      dmaCapita: "yes",
-      warehouse: "no",
-      supplyChain: "no",
-      stateOwn: "yes",
-    },
-    // ... more rows
-  ];
-
-  const singleStateData: Record<string, ScorecardRow[]> = {
-    dma: [
-      { indicator: "60% Ward PHCs Capitalized", status: "no" },
-      { indicator: "DMA Established", status: "no" },
-      { indicator: "DMA Fully Capitalized", status: "no" },
-    ],
-    health_info: [
-      { indicator: "Data Reporting Complete", status: "yes" },
-      { indicator: "Electronic Health Records", status: "no" },
-    ],
-    health_insurance: [
-      { indicator: "State Health Insurance Agency", status: "yes" },
-      { indicator: "Coverage Above 50%", status: "no" },
-    ],
-    health_security: [{ indicator: "Emergency Response Unit", status: "no" }],
-    immunization: [
-      { indicator: "Routine Immunization Coverage", status: "yes" },
-    ],
-    phccl: [{ indicator: "Primary Health Care Centers Linked", status: "no" }],
-  };
   const [selectedCategory, setSelectedCategory] = useState(
     categories[0]?.value
   );
+  const columnTwo: ScorecardRow[] = stateData?.selected_state || [];
+  const prevValues = useRef({
+    selectedRound,
+    selectedState,
+    selectedYear,
+    selectedCategory,
+  });
+
+  const sampleData = stateData?.all_states || [];
+
+  const getStateParam = (state: string) => {
+    if (state === "Federal Capital Territory") return "FCT";
+    if (state === "Nassarawa") return "Nasarawa";
+    return state;
+  };
+
+  const fetchData = async () => {
+    if (!selectedState || !selectedYear) return;
+
+    setLoading(true);
+    const stateParam = getStateParam(selectedState);
+
+    try {
+      const url =
+        selectedCategory === "Nutrition"
+          ? `${Endpoints.scorecard.summary}/${stateParam}/${selectedYear}/${selectedCategory}/${selectedRound}`
+          : `${Endpoints.scorecard.summary}/${stateParam}/${selectedYear}/${selectedCategory}`;
+
+      const stats = await httpClient.get(url);
+      setStateData(stats?.data);
+    } catch (error) {
+      toast.error("Failed to load scorecard data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedRound, selectedState, selectedYear, selectedCategory]);
 
   return (
     <>
+      {loading && <LoadingScreen text="Please wait..." />}
       <div className="flex justify-around text-black">
         <div>
           <h1 className="text-2xl font-bold mb-6">Scorecard Dashboard</h1>
@@ -213,31 +102,37 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ state = "Akwa Ibom" }) => {
             ))}
           </select>
         </div>
+        {selectedCategory === "Nutrition" && (
+          <div className="mb-6 text-black">
+            <label htmlFor="category" className="mr-2 font-medium">
+              Select Round:
+            </label>
+            <select
+              id="round"
+              className="border rounded px-3 py-2"
+              value={selectedRound}
+              onChange={(e) => setSelectedRound(e.target.value)}
+            >
+              {round.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
-      {/* <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 overflow-hidden">
-        <ScorecardTable
-          mode="single"
-          title={`${state} Scorecard`}
-          data={columnTwo}
-        />
-        <ScorecardTable mode="multi" title="National View" data={sampleData} />
-      </div> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <div className="overflow-hidden rounded-xl shadow">
           <ScorecardTable
-            mode="single"
-            title={`${state} Scorecard`}
+            title={`${selectedState} State Scorecard`}
             data={columnTwo}
           />
         </div>
 
         <div className="overflow-hidden rounded-xl shadow">
-          <ScorecardTable
-            mode="multi"
-            title="National View"
-            data={sampleData}
-          />
+          <NationalScorecardTable title="National View" data={sampleData} />
         </div>
       </div>
     </>
