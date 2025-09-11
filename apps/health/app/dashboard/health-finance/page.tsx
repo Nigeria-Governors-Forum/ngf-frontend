@@ -1,6 +1,6 @@
 "use client";
 
-import HorizontalStateBarChart from "@repo/ui/amountBar";
+import LgaPerCapitaBarChart from "@repo/ui/lgaPerCapita";
 import ComparisonBarChart from "@repo/ui/barchart";
 import RechartMetricCard from "@repo/ui/rechartMetricCard";
 import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
@@ -8,40 +8,16 @@ import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { Endpoints, httpClient } from "../../../api-client/src";
 import LoadingScreen from "@repo/ui/loadingScreen";
+import { formatNumber } from "../page";
 
 const HealthFinance = () => {
   const [loading, setLoading] = useState(false);
   const { selectedState, selectedYear } = useTopbarFilters();
   const [stateData, setStateData] = useState<any>();
 
-  const sample = [
-    { name: "2020", actual: 120000, budgeted: 140000 },
-    { name: "2021", actual: 90000, budgeted: 85000 },
-    { name: "2022", actual: 150000, budgeted: 160000 },
-    { name: "2023", actual: 120000, budgeted: 140000 },
-    { name: "2024", actual: 150000, budgeted: 160000 },
-  ];
+  const sample = stateData?.yearlyTotals;
 
-  const data = [
-    { name: "Igueben", value: 20150 },
-    { name: "Etsako East", value: 9423 },
-    { name: "Esan Central", value: 8555 },
-    { name: "Esan West", value: 7866 },
-    { name: "Esan North-East", value: 7475 },
-    { name: "Ovia South-West", value: 7283 },
-    { name: "Etsako West", value: 7268 },
-    { name: "Owan-West", value: 7229 },
-    { name: "Owan-East", value: 7119 },
-    { name: "Ovia North-East", value: 6539 },
-    { name: "Esan South-East", value: 6379 },
-    { name: "Egor", value: 6241 },
-    { name: "Uhunmwonde", value: 6166 },
-    { name: "Akoko-Edo", value: 6034 },
-    { name: "Orhionmwon", value: 5021 },
-    { name: "Etsako Central", value: 4972 },
-    { name: "Oredo", value: 3551 },
-    { name: "Ikpoba-Okha", value: 32420, color: "#cccccc" },
-  ];
+  const data = stateData?.perCapita || [];
 
   const fetchData = async () => {
     if (!selectedState || !selectedYear) return;
@@ -79,10 +55,9 @@ const HealthFinance = () => {
 
   const percentage =
     healthTotal > 0 ? ((healthTotal / stateTotal) * 100).toFixed(2) : "0";
-    
+
   return (
     <>
-      {" "}
       {loading && <LoadingScreen text="Please wait..." />}
       <div className="space-y-8 min-h-screen">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
@@ -112,7 +87,13 @@ const HealthFinance = () => {
           <RechartMetricCard
             variant="simple"
             title="Health Expenditure per Capita"
-            amount={4856.57}
+            amount={
+              formatNumber(
+                parseFloat(
+                  Number(stateData?.expenditure?.[0]?.per_capita).toFixed(2)
+                )
+              ) as string
+            }
             currencySymbol="₦"
             currencyDenotation="T"
           />
@@ -128,12 +109,13 @@ const HealthFinance = () => {
           />
 
           <div className="p-4 bg-white rounded-2xl shadow">
-            <HorizontalStateBarChart
+            <LgaPerCapitaBarChart
               title="Per Capita by LGA"
               data={data}
               currencySymbol="₦"
               showValueSuffix=""
               className="ui-w-full"
+              autoScale={true}
             />
           </div>
         </div>

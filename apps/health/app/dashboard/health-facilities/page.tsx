@@ -39,7 +39,7 @@ const HealthFacility: React.FC<HealthFacilityPageProps> = ({
         `${Endpoints.healthFacilities.summary}/${stateParam}/${selectedYear}`
       );
       console.log(stats);
-      setStateData(stats.data);
+      setStateData(stats?.data);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Invalid Credentials");

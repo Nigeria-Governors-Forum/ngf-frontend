@@ -12,14 +12,24 @@ import {
   Cell,
 } from "recharts";
 
+function formatNumber(n: number): string {
+  if (n >= 1e18) return (n / 1e18).toFixed(2) + "Q"; // Quintillion
+  if (n >= 1e15) return (n / 1e15).toFixed(2) + "P"; // Quadrillion
+  if (n >= 1e12) return (n / 1e12).toFixed(2) + "T"; // Trillion
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + "B"; // Billion
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + "M"; // Million
+  if (n >= 1e3) return (n / 1e3).toFixed(2) + "K"; // Thousand
+  return n.toString();
+}
+
 export interface CategoryComparison {
   name: string;
-  actual: number;
-  budgeted: number;
+  actual: number | string | null;
+  budgeted: number | string | null;
 }
 
 export interface ComparisonBarChartProps {
-  data: CategoryComparison[];
+  data?: CategoryComparison[];
   currencySymbol?: string;
   title?: string;
   className?: string;
@@ -27,8 +37,15 @@ export interface ComparisonBarChartProps {
   budgetColor?: string;
 }
 
-const formatCurrency = (value: number, symbol = "₦") =>
-  symbol + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+// ✅ Safe formatter: handles null, string, undefined
+const formatCurrency = (
+  value: number | string | null | undefined,
+  symbol = "₦"
+) => {
+  const num = Number(value);
+  if (!isFinite(num)) return symbol + "0.00";
+  return symbol + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 
 const TooltipContent: React.FC<any> = ({
   active,
@@ -37,9 +54,12 @@ const TooltipContent: React.FC<any> = ({
   currencySymbol,
 }) => {
   if (!active || !payload || payload.length === 0) return null;
-  const actual = payload.find((p: any) => p.dataKey === "actual")?.value ?? 0;
-  const budgeted =
-    payload.find((p: any) => p.dataKey === "budgeted")?.value ?? 0;
+  const actual = Number(
+    payload.find((p: any) => p.dataKey === "actual")?.value ?? 0
+  );
+  const budgeted = Number(
+    payload.find((p: any) => p.dataKey === "budgeted")?.value ?? 0
+  );
 
   return (
     <div className="ui:bg-black ui:shadow ui:rounded ui:p-3 ui:text-sm ui:border ui:border-gray-200">
@@ -48,16 +68,16 @@ const TooltipContent: React.FC<any> = ({
         <div className="ui:flex ui:items-center">
           <div
             className="ui:w-2 ui:h-2 ui:rounded-full ui:mr-2"
-            style={{ backgroundColor: "#2563EB" }}
+            style={{ backgroundColor: "#10B981" }}
           />
-          <span>Budgeted: {formatCurrency(actual, currencySymbol)}</span>
+          <span>Budgeted: {formatCurrency(budgeted, currencySymbol)}</span>
         </div>
         <div className="ui:flex ui:items-center">
           <div
             className="ui:w-2 ui:h-2 ui:rounded-full ui:mr-2"
-            style={{ backgroundColor: "#10B981" }}
+            style={{ backgroundColor: "#2563EB" }}
           />
-          <span>Actual: {formatCurrency(budgeted, currencySymbol)}</span>
+          <span>Actual: {formatCurrency(actual, currencySymbol)}</span>
         </div>
       </div>
     </div>
@@ -65,15 +85,18 @@ const TooltipContent: React.FC<any> = ({
 };
 
 const ComparisonBarChart: React.FC<ComparisonBarChartProps> = ({
-  data,
+  data = [], // ✅ fallback to empty array
   currencySymbol = "₦",
   title,
   className = "",
-  actualColor = "#2563EB",
-  budgetColor = "#10B981",
+  actualColor = "#2563EB", // blue
+  budgetColor = "#10B981", // green
 }) => {
+  // ✅ Ensure safe numeric values
   const maxVal = Math.max(
-    ...data.map((d) => Math.max(d.actual, d.budgeted)),
+    ...data.map((d) =>
+      Math.max(Number(d.actual ?? 0), Number(d.budgeted ?? 0))
+    ),
     0
   );
 
@@ -102,7 +125,8 @@ const ComparisonBarChart: React.FC<ComparisonBarChartProps> = ({
               height={60}
             />
             <YAxis
-              tickFormatter={(val) => formatCurrency(val, currencySymbol)}
+              // tickFormatter={(val) => formatCurrency(val, currencySymbol)}
+              tickFormatter={(val) => formatNumber(Number(val))} // 👈 use this
               width={80}
               domain={[0, Math.ceil(maxVal * 1.1)]}
               tick={{ fontSize: 12 }}
@@ -123,26 +147,28 @@ const ComparisonBarChart: React.FC<ComparisonBarChartProps> = ({
                 <span className="ui:font-medium">{value}</span>
               )}
             />
+            {/* ✅ Budgeted bar */}
             <Bar
               dataKey="budgeted"
               name="Budgeted"
-              fill={actualColor}
-              radius={[4, 4, 0, 0]}
-              maxBarSize={20}
-            >
-              {data.map((_, idx) => (
-                <Cell key={`budgeted-${idx}`} fill={actualColor} />
-              ))}
-            </Bar>
-            <Bar
-              dataKey="actual"
-              name="Actual"
               fill={budgetColor}
               radius={[4, 4, 0, 0]}
               maxBarSize={20}
             >
               {data.map((_, idx) => (
-                <Cell key={`actual-${idx}`} fill={budgetColor} />
+                <Cell key={`budgeted-${idx}`} fill={budgetColor} />
+              ))}
+            </Bar>
+            {/* ✅ Actual bar */}
+            <Bar
+              dataKey="actual"
+              name="Actual"
+              fill={actualColor}
+              radius={[4, 4, 0, 0]}
+              maxBarSize={20}
+            >
+              {data.map((_, idx) => (
+                <Cell key={`actual-${idx}`} fill={actualColor} />
               ))}
             </Bar>
           </BarChart>
