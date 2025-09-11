@@ -74,6 +74,12 @@ const HealthFinance = () => {
     fetchData();
   }, [selectedState, selectedYear]);
 
+  const stateTotal = Number(stateData?.state_budget?.total) || 0;
+  const healthTotal = Number(stateData?.health_budget?.total) || 0;
+
+  const percentage =
+    healthTotal > 0 ? ((healthTotal / stateTotal) * 100).toFixed(2) : "0";
+    
   return (
     <>
       {" "}
@@ -83,32 +89,23 @@ const HealthFinance = () => {
           <RechartMetricCard
             variant="budget"
             title="Total State Budget"
-            amount={0.53}
+            amount={stateData?.state_budget?.formattedTotal || 0}
+            breakdown={stateData?.state_budget?.breakdown || []}
             currencySymbol="₦"
-            breakdown={[
-              { label: "Capital", percentage: 58, color: "#3B82F6" },
-              { label: "Overhead", percentage: 24, color: "#1E3A8A" },
-              { label: "Personnel", percentage: 18, color: "#C9672A" },
-            ]}
           />
 
           <RechartMetricCard
             variant="budget"
             title="Total Health Budget"
-            amount={0.53}
+            amount={stateData?.health_budget?.formattedTotal || 0}
+            breakdown={stateData?.health_budget?.breakdown || []}
             currencySymbol="₦"
-            breakdown={[
-              { label: "Marketing", percentage: 40, color: "#3b82f6" }, // blue
-              { label: "Operations", percentage: 30, color: "#10b981" }, // green
-              { label: "R&D", percentage: 20, color: "#f59e0b" }, // amber
-              { label: "Other", percentage: 10, color: "#ef4444" }, // red
-            ]}
           />
 
           <RechartMetricCard
             variant="gauge"
             title="Health Allocation"
-            valuePct={12.3}
+            valuePct={Number(percentage)}
             maxPct={15}
           />
 

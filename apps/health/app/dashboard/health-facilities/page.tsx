@@ -10,6 +10,7 @@ import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
 import { Endpoints, httpClient } from "../../../api-client/src";
 import toast from "react-hot-toast";
 import LoadingScreen from "@repo/ui/loadingScreen";
+import { formatNumber } from "../page";
 
 interface HealthFacilityPageProps {
   title?: string;
@@ -111,7 +112,8 @@ const HealthFacility: React.FC<HealthFacilityPageProps> = ({
               <div className="flex justify-around items-center text-sm text-gray-700">
                 <div className="flex flex-col items-center">
                   <span className="text-blue-600 font-medium text-base">
-                    {stateData?.health_facilities || "N/A"}
+                    {formatNumber(Number(stateData?.health_facilities)) ||
+                      "N/A"}
                   </span>
                 </div>
                 <div className="flex flex-col items-center">

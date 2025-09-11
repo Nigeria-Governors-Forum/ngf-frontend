@@ -24,7 +24,7 @@ export interface BreakdownItem {
 export interface MetricCardProps {
   variant: Variant;
   title: string;
-  amount?: number;
+  amount?: string;
   currencySymbol?: string;
   breakdown?: BreakdownItem[];
   valuePct?: number;
@@ -42,7 +42,7 @@ const formatCurrency = (val: number, symbol = "₦") => {
 
 const BudgetVariant: React.FC<{
   title: string;
-  amount: number;
+  amount: string;
   currencySymbol: string;
   breakdown: BreakdownItem[];
   currencyDenotation?: string;
@@ -64,16 +64,10 @@ const BudgetVariant: React.FC<{
     }, {}),
   ];
 
-  // const data = [
-  //   breakdown.reduce((acc, b) => ({ ...acc, [b.label]: b.percentage }), {
-  //     name: "progress",
-  //   }),
-  // ];
-
   return (
     <div className="ui:max-w-sm ui:bg-white ui:rounded-2xl ui:shadow ui:p-6 ui:flex ui:flex-col ui:gap-4 ui:border ui:border-green-400">
       <div className="ui:text-center">
-        <div className="ui:text-lg ui:font-semibold ui:text-gray-900">
+        <div className="ui:text-lg ui:font-semibold ui:text-green-800">
           {title}
         </div>
       </div>
@@ -83,8 +77,7 @@ const BudgetVariant: React.FC<{
           {currencySymbol}
         </span>
         <span className="ui:text-4xl ui:font-extrabold ui:text-black">
-          {amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-          {currencyDenotation}
+          {amount}
         </span>
       </div>
 
@@ -154,6 +147,82 @@ const BudgetVariant: React.FC<{
   );
 };
 
+// const GaugeVariant: React.FC<{
+//   title: string;
+//   valuePct: number;
+//   maxPct: number;
+// }> = ({ title, valuePct = 0, maxPct = 100 }) => {
+//   const safePct = Math.min(Math.max(valuePct, 0), maxPct);
+//   const percentOfMax = (safePct / maxPct) * 100;
+//   const data = [
+//     { name: "filled", value: percentOfMax },
+//     // { name: "empty", value: 100 - percentOfMax },
+//     // { name: "empty", value: 100 - percentOfMax },
+//     // { name: "empty", value: 100 - percentOfMax },
+//     // { name: "empty", value: 100 - percentOfMax },
+//   ];
+
+//   return (
+//     <div className="ui:max-w-sm ui:bg-white ui:rounded-2xl ui:shadow ui:p-6 ui:flex ui:flex-col ui:items-center ui:gap-4 ui:border ui:border-green-400">
+//       <div className="ui:text-center">
+//         <div className="ui:text-lg ui:font-semibold ui:text-gray-900">
+//           {title}
+//         </div>
+//       </div>
+
+//       <div className="ui:relative ui:flex ui:items-center ui:justify-center ">
+//         <div style={{ width: 160, height: 150, position: "relative" }}>
+//           <ResponsiveContainer width="100%" height="100%">
+//             <RadialBarChart
+//               cx="50%"
+//               cy="100%"
+//               innerRadius="70%"
+//               outerRadius="100%"
+//               startAngle={180}
+//               endAngle={0}
+//               data={data}
+//               barSize={20}
+//             >
+//               <PolarAngleAxis
+//                 type="number"
+//                 domain={[0, 100]}
+//                 angleAxisId={0}
+//                 tick={false}
+//               />
+//               <RadialBar
+//                 cornerRadius={10}
+//                 background={{ fill: "#f0f0f0" }}
+//                 dataKey="value"
+//                 animationDuration={600}
+//                 isAnimationActive={false}
+//                 fill="#dc2626"
+//               >
+//                 {data.map((entry, idx) => {
+//                   if (entry.name === "filled") {
+//                     return <Cell key={idx} fill="#dc2626" />;
+//                   }
+//                   return <Cell key={idx} fill="#f0f0f0" />;
+//                 })}
+//               </RadialBar>
+//             </RadialBarChart>
+//           </ResponsiveContainer>
+//           <div className="ui:absolute ui:inset-0 ui:flex ui:flex-col ui:items-center ui:justify-center ui:pointer-events-none">
+//             <div className="ui:text-3xl ui:font-bold ui:text-black ui:mb-10">
+//               {safePct.toFixed(1)}%
+//             </div>
+//           </div>
+//           <div className="ui:absolute ui:left-0 ui:bottom-0 ui:text-xs ui:font-medium ui:text-gray-700">
+//             0%
+//           </div>
+//           <div className="ui:absolute ui:right-0 ui:bottom-0 ui:text-xs ui:font-medium ui:text-gray-700">
+//             {maxPct}%
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
 const GaugeVariant: React.FC<{
   title: string;
   valuePct: number;
@@ -161,18 +230,16 @@ const GaugeVariant: React.FC<{
 }> = ({ title, valuePct = 0, maxPct = 100 }) => {
   const safePct = Math.min(Math.max(valuePct, 0), maxPct);
   const percentOfMax = (safePct / maxPct) * 100;
-  const data = [
-    { name: "filled", value: percentOfMax },
-    { name: "empty", value: 100 - percentOfMax },
-    // { name: "empty", value: 100 - percentOfMax },
-    // { name: "empty", value: 100 - percentOfMax },
-    // { name: "empty", value: 100 - percentOfMax },
-  ];
+
+  // Pick color based on comparison
+  const gaugeColor = safePct < maxPct ? "#dc2626" : "#16a34a"; // red if less, green if equal/max
+
+  const data = [{ name: "filled", value: percentOfMax }];
 
   return (
     <div className="ui:max-w-sm ui:bg-white ui:rounded-2xl ui:shadow ui:p-6 ui:flex ui:flex-col ui:items-center ui:gap-4 ui:border ui:border-green-400">
       <div className="ui:text-center">
-        <div className="ui:text-lg ui:font-semibold ui:text-gray-900">
+        <div className="ui:text-lg ui:font-semibold ui:text-green-800">
           {title}
         </div>
       </div>
@@ -202,17 +269,12 @@ const GaugeVariant: React.FC<{
                 dataKey="value"
                 animationDuration={600}
                 isAnimationActive={false}
-                fill="#dc2626"
+                fill={gaugeColor} // ✅ use dynamic color
               >
-                {data.map((entry, idx) => {
-                  if (entry.name === "filled") {
-                    return <Cell key={idx} fill="#dc2626" />;
-                  }
-                  return <Cell key={idx} fill="#f0f0f0" />;
-                })}
+                {data.map((entry, idx) => (
+                  <Cell key={idx} fill={gaugeColor} />
+                ))}
               </RadialBar>
-
-              
             </RadialBarChart>
           </ResponsiveContainer>
           <div className="ui:absolute ui:inset-0 ui:flex ui:flex-col ui:items-center ui:justify-center ui:pointer-events-none">
@@ -234,14 +296,14 @@ const GaugeVariant: React.FC<{
 
 const SimpleVariant: React.FC<{
   title: string;
-  amount: number;
+  amount: string;
   currencySymbol: string;
   currencyDenotation?: string;
 }> = ({ title, amount, currencySymbol, currencyDenotation }) => {
   return (
     <div className="ui:max-w-sm ui:bg-white ui:rounded-2xl ui:shadow ui:p-6 ui:flex ui:flex-col ui:gap-4 ui:border ui:border-green-400">
       <div className="ui:text-center">
-        <div className="ui:text-lg ui:font-semibold ui:text-gray-900">
+        <div className="ui:text-lg ui:font-semibold ui:text-green-900">
           {title}
         </div>
       </div>
@@ -250,7 +312,7 @@ const SimpleVariant: React.FC<{
           {currencySymbol}
         </span>
         <span className="ui:text-4xl ui:font-extrabold ui:text-black">
-          {formatCurrency(amount, "")} {currencyDenotation}
+          {amount}
         </span>
       </div>
     </div>
@@ -260,7 +322,7 @@ const SimpleVariant: React.FC<{
 const RechartMetricCard: React.FC<MetricCardProps> = ({
   variant,
   title,
-  amount = 0,
+  amount="",
   currencySymbol = "₦",
   breakdown = [],
   valuePct = 0,
