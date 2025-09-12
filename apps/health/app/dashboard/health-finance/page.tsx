@@ -16,7 +16,6 @@ const HealthFinance = () => {
   const [stateData, setStateData] = useState<any>();
 
   const sample = stateData?.yearlyTotals;
-
   const data = stateData?.perCapita || [];
 
   const fetchData = async () => {

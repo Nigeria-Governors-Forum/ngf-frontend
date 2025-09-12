@@ -5,7 +5,7 @@ import DemographyCard from "@repo/ui/demographyCard";
 import PopulationSummaryTable, {
   LgaRow,
 } from "@repo/ui/populationSummaryTable";
-import { FaHospital, FaMoneyCheck, FaUserNurse } from "react-icons/fa";
+import { FaHospital, FaUserNurse } from "react-icons/fa";
 import MapView from "../../components/MapWrapper";
 import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
 import toast from "react-hot-toast";

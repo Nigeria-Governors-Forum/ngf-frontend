@@ -1,8 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 export const formatNumber = (num: number): string => {
   return num.toLocaleString("en-US");
@@ -12,19 +17,24 @@ interface TopbarFiltersContextType {
   setSelectedState: (state: string) => void;
   selectedYear: number;
   setSelectedYear: (year: number) => void;
+  selectedZone: string;
+  setSelectedZone: (zone: string) => void;
 }
 
-const TopbarFiltersContext = createContext<TopbarFiltersContextType | undefined>(undefined);
+const TopbarFiltersContext = createContext<
+  TopbarFiltersContextType | undefined
+>(undefined);
 
 export function TopbarFiltersProvider({ children }: { children: ReactNode }) {
   const [selectedState, setSelectedState] = useState("");
+  const [selectedZone, setSelectedZone] = useState("");
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const router = useRouter();
 
   useEffect(() => {
     const userProfile = sessionStorage.getItem("user");
     if (!userProfile) {
-      router.push("/login");
+      router.push("/");
       return;
     }
 
@@ -41,7 +51,7 @@ export function TopbarFiltersProvider({ children }: { children: ReactNode }) {
 
   return (
     <TopbarFiltersContext.Provider
-      value={{ selectedState, setSelectedState, selectedYear, setSelectedYear }}
+      value={{ selectedState, setSelectedState, selectedYear, setSelectedYear, selectedZone, setSelectedZone }}
     >
       {children}
     </TopbarFiltersContext.Provider>
@@ -51,7 +61,9 @@ export function TopbarFiltersProvider({ children }: { children: ReactNode }) {
 export function useTopbarFilters() {
   const ctx = useContext(TopbarFiltersContext);
   if (!ctx) {
-    throw new Error("useTopbarFilters must be used inside TopbarFiltersProvider");
+    throw new Error(
+      "useTopbarFilters must be used inside TopbarFiltersProvider"
+    );
   }
   return ctx;
 }

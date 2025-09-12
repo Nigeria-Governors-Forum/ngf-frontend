@@ -23,6 +23,7 @@ export const Endpoints = {
   },
   healthFinance: {
     summary: "/health-finance",
+    zone: "/health-finance/zonal",
   },
   users: {
     list: "/user",

@@ -41,8 +41,13 @@ const Topbar: React.FC<TopbarProps> = ({
   const router = useRouter();
   const pathname = usePathname();
 
-  const { selectedState, selectedYear, setSelectedYear, setSelectedState } =
-    useTopbarFilters();
+  const {
+    selectedState,
+    selectedYear,
+    setSelectedYear,
+    setSelectedState,
+    selectedZone,
+  } = useTopbarFilters();
 
   useEffect(() => {
     if (!selectedYear) return;
@@ -57,13 +62,15 @@ const Topbar: React.FC<TopbarProps> = ({
               ? `Zonal and National View of Health Facilities per Capita`
               : pathname === "/dashboard/human-resource"
                 ? `${selectedState} State Human Resource for Health Overview`
-                : pathname ==="/dashboard/score-card"
-                ? `NFG Scorecard`
-                : pathname ==="/dashboard/health-finance"
-                ? `${selectedState} state  Health Finance Dashboard ${selectedYear}`
-                : title
+                : pathname === "/dashboard/score-card"
+                  ? `NFG Scorecard`
+                  : pathname === "/dashboard/health-finance"
+                    ? `${selectedState} state  Health Finance Dashboard ${selectedYear}`
+                    : pathname === "/dashboard/zonal-health-finance"
+                      ? `${selectedZone} Health Finance Dashboard (${selectedYear})`
+                      : title
     );
-  }, [selectedYear, pathname, title, onYearChange]);
+  }, [selectedYear, pathname, title, onYearChange, selectedZone]);
 
   const years = Array.from({ length: 10 }, (_, i) => 2025 - i);
 
