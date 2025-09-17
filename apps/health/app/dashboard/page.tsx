@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
 import LoadingScreen from "@repo/ui/loadingScreen";
 import MapView from "../components/MapWrapper";
+import { NominatimMap } from "../components/NomatinMap";
 
 export const formatNumber = (num: number): string => {
   return num.toLocaleString("en-US");
@@ -19,6 +20,8 @@ export const formatNumber = (num: number): string => {
 export default function DashboardHome() {
   const [loading, setLoading] = useState(false);
   const { selectedState, selectedYear } = useTopbarFilters();
+  // console.log('selected state', selectedState);
+
   const [stateData, setStateData] = useState<any>();
 
   const [rawTopoOrGeo, setRawTopoOrGeo] = useState<any>(null);
@@ -317,6 +320,7 @@ export default function DashboardHome() {
             h2r={stateData?.total_Hard_To_Reach}
           />
         </div>
+        <NominatimMap highlightQuery={selectedState} />
       </div>
     </>
   );
