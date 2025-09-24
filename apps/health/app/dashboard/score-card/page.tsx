@@ -17,13 +17,13 @@ const ScoreCard = () => {
   const [selectedRound, setSelectedRound] = useState("");
 
   const categories = [
-    { value: "DMA", label: "DMA" },
-    { value: "Health Information", label: "Health Information" },
-    { value: "Health Insurance", label: "Health Insurance" },
-    { value: "Health Security", label: "Health Security" },
-    { value: "Immunization", label: "Immunization" },
-    { value: "PHCLC", label: "PHCLC" },
-    { value: "Nutrition", label: "Nutrition" },
+    { value: "DMA", label: "DMA Scorecard" },
+    { value: "Health Information", label: "Health Information Scorecard" },
+    { value: "Health Insurance", label: "Health Insurance Scorecard" },
+    { value: "Health Security", label: "Health Security Scorecard" },
+    { value: "Immunization", label: "Immunization Scorecard" },
+    { value: "Nutrition", label: "Nutrition Scorecard" },
+    { value: "PHCLC", label: "PHCLC Scorecard" },
   ];
 
   const round = [

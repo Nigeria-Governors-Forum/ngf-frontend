@@ -90,7 +90,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                 Public
               </th>
               <th className="ui:px-4 ui:py-3 ui:text-center ui:font-semibold">
-                Total
+                <span className="ui:font-bold ui:text-2xl">Total</span>
               </th>
             </tr>
           </thead>
@@ -112,7 +112,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                   >
                     <div className="ui:flex ui:items-center ui:gap-2">
                       {/* colored pill for status */}
-                      <span
+                      {/* <span
                         className={`ui:inline-block ui:h-3 ui:w-3 ui:rounded-full ${
                           row.name === "Total"
                             ? "ui:bg-green-600"
@@ -122,7 +122,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                                 ? "ui:bg-gray-500"
                                 : "ui:bg-gray-200"
                         }`}
-                      />
+                      /> */}
                       <span>{row.name}</span>
                     </div>
                   </td>
@@ -132,7 +132,9 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                   <td className="ui:px-4 ui:py-3 ui:text-center">
                     {row.public}
                   </td>
+                  {/* <td className="ui:px-4 ui:py-3 ui:text-center ui:font-bold"> */}
                   <td className="ui:px-4 ui:py-3 ui:text-center">
+                    <span></span>
                     {formatNumber(Number(row.total)) || "N/A"}
                   </td>
                 </tr>

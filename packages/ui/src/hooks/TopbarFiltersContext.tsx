@@ -19,6 +19,8 @@ interface TopbarFiltersContextType {
   setSelectedYear: (year: number) => void;
   selectedZone: string;
   setSelectedZone: (zone: string) => void;
+  showConfirm: boolean;
+  setShowConfirm: (confirm: boolean) => void;
 }
 
 const TopbarFiltersContext = createContext<
@@ -29,6 +31,8 @@ export function TopbarFiltersProvider({ children }: { children: ReactNode }) {
   const [selectedState, setSelectedState] = useState("");
   const [selectedZone, setSelectedZone] = useState("");
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -41,17 +45,26 @@ export function TopbarFiltersProvider({ children }: { children: ReactNode }) {
     try {
       const parsedUserProfile = JSON.parse(userProfile);
       if (Object.keys(parsedUserProfile).length === 0) {
-        router.push("/login");
+        router.push("/");
       }
       setSelectedState(parsedUserProfile.state || "");
     } catch {
-      router.push("/login");
+      router.push("/");
     }
   }, [router]);
 
   return (
     <TopbarFiltersContext.Provider
-      value={{ selectedState, setSelectedState, selectedYear, setSelectedYear, selectedZone, setSelectedZone }}
+      value={{
+        selectedState,
+        setSelectedState,
+        selectedYear,
+        setSelectedYear,
+        selectedZone,
+        setSelectedZone,
+        showConfirm,
+        setShowConfirm,
+      }}
     >
       {children}
     </TopbarFiltersContext.Provider>

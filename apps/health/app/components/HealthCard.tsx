@@ -112,7 +112,7 @@ const HealthCard: React.FC<SummaryTableProps> = ({
                   >
                     <div className="flex items-center gap-2">
                       {/* colored pill for status */}
-                      <span
+                      {/* <span
                         className={`inline-block h-3 w-3 rounded-full ${
                           row.institution === "Total"
                             ? "bg-green-600"
@@ -122,7 +122,7 @@ const HealthCard: React.FC<SummaryTableProps> = ({
                                 ? "bg-gray-500"
                                 : "bg-gray-200"
                         }`}
-                      />
+                      /> */}
                       <span>{row.institution}</span>
                     </div>
                   </td>

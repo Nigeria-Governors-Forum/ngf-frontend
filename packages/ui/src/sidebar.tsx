@@ -19,6 +19,7 @@ import {
 } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import ConfirmPrompt from "./confirmPrompt";
+// import { useTopbarFilters } from "./hooks/TopbarFiltersContext";
 
 const cn = (...classes: (string | undefined | false)[]) =>
   classes.filter(Boolean).join(" ");
@@ -35,67 +36,67 @@ export const navItem: NavItem[] = [
   {
     label: "Health",
     icon: <FaTachometerAlt />,
-    roles: ["user", "h-admin"],
+    roles: ["user", "h-admin", "s-admin"],
     children: [
       {
         href: "/dashboard/",
         icon: <FaTachometerAlt />,
         label: "Dashboard",
-        roles: ["user", "h-admin"],
+        roles: ["user", "h-admin", "s-admin"],
       },
       {
         href: "/dashboard/demography",
         icon: <FaMoneyCheck />,
         label: "Demography",
-        roles: ["user","h-admin"],
+        roles: ["user", "h-admin", "s-admin"],
       },
       {
         href: "/dashboard/health-facilities",
         icon: <FaMoneyCheck />,
         label: "Health Facilities",
-        roles: ["user", "h-admin"],
+        roles: ["user", "h-admin", "s-admin"],
       },
       {
         href: "/dashboard/zonal-health-facilities",
         icon: <FaMoneyCheck />,
         label: "Zonal Health Facilities",
-        roles: ["user", "h-admin"],
+        roles: ["user", "h-admin", "s-admin"],
       },
       {
         href: "/dashboard/human-resource",
         icon: <FaMoneyCheck />,
         label: "Human Resource",
-        roles: ["user", "h-admin"],
+        roles: ["user", "h-admin", "s-admin"],
       },
       {
         href: "/dashboard/health-finance",
         icon: <FaMoneyCheck />,
         label: "Health Finance",
-        roles: ["user", "h-admin"],
+        roles: ["user", "h-admin", "s-admin"],
       },
       {
         href: "/dashboard/zonal-health-finance",
         icon: <FaMoneyCheck />,
         label: "Zonal Health Finance",
-        roles: ["user", "h-admin"],
+        roles: ["user", "h-admin", "s-admin"],
       },
       {
         href: "/dashboard/score-card",
         icon: <FaMoneyCheck />,
         label: "Score Cards",
-        roles: ["user", "h-admin"],
+        roles: ["user", "h-admin", "s-admin"],
       },
       {
         href: "/dashboard/upload-data",
         icon: <FaMoneyCheck />,
         label: "Data Upload",
-        roles: ["h-admin", "s-admin",],
+        roles: ["h-admin", "s-admin", "s-admin"],
       },
       {
         href: "/dashboard/register",
         icon: <FaMoneyCheck />,
         label: "Register User",
-        roles: ["h-admin", "s-admin"],
+        roles: ["h-admin", "s-admin", "s-admin"],
       },
       // {
       //   href: "/dashboard",
@@ -127,13 +128,13 @@ export const navItem: NavItem[] = [
     href: "https://ngf-frontend-agric.vercel.app/",
     icon: <FaUniversity />,
     label: "Agriculture",
-    roles: ["user", "acct", "audit", "admin"],
+    roles: ["user", "acct", "audit", "h-admin", "s-admin"],
   },
   {
     href: "https://ngf-frontend-agric.vercel.app/",
     icon: <FaUniversity />,
     label: "Education",
-    roles: ["user", "acct", "audit", "admin"],
+    roles: ["user", "acct", "audit", "h-admin", "s-admin"],
   },
   {
     href: "/dashboard/account",
@@ -182,6 +183,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   setMobileOpen,
   navItems = navItem,
 }) => {
+  // const { showConfirm, setShowConfirm } = useTopbarFilters();
+
   const [role, setRole] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -192,9 +195,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     if (!p) return "/";
     return p.replace(/\/+$/, "") || "/";
   };
-
-  // const pathnameRaw = usePathname() || "/";
-  // const path = normalizePath(pathnameRaw);
 
   useEffect(() => {
     // Replace with real auth lookup
@@ -213,9 +213,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     setMobileOpen(false);
   }, [setMobileOpen]);
 
-  // const filteredNav = navItems.filter((item) =>
-  //   role ? item.roles.includes(role) : false
-  // );
 
   const filteredNav = navItems
     .map((item) => {

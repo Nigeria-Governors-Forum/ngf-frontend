@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
 import LoadingScreen from "@repo/ui/loadingScreen";
 import MapView from "../components/MapWrapper";
-import { NominatimMap } from "../components/NomatinMap";
+import NominatimMap from "../components/NominaWrapper";
 
 export const formatNumber = (num: number): string => {
   return num.toLocaleString("en-US");
@@ -93,16 +93,16 @@ export default function DashboardHome() {
     );
     const stateNorm = stateAlias[rawNorm] || rawNorm;
 
-    console.log("🟢 Selected state (raw):", selectedState);
-    console.log("🟢 After normalize:", rawNorm);
-    console.log("🟢 After alias:", stateNorm);
+    // console.log("🟢 Selected state (raw):", selectedState);
+    // console.log("🟢 After normalize:", rawNorm);
+    // console.log("🟢 After alias:", stateNorm);
 
     // 🔹 Debug shapefile states
     if (rawTopoOrGeo?.features?.length) {
       const uniqueStates = [
         ...new Set(rawTopoOrGeo.features.map((f: any) => f.properties?.NAME_1)),
       ];
-      console.log("📍 All shapefile states (NAME_1):", uniqueStates);
+      // console.log("📍 All shapefile states (NAME_1):", uniqueStates);
     }
 
     // 🔹 Build LGA lookup from API
@@ -127,15 +127,15 @@ export default function DashboardHome() {
         nameNorm.includes(stateNorm) || stateNorm.includes(nameNorm);
 
       if (isMatch) {
-        console.log(`✅ MATCHED shapefile state:`, nameProp, "→", nameNorm);
+        // console.log(`✅ MATCHED shapefile state:`, nameProp, "→", nameNorm);
       } else {
-        console.log(`❌ NOT matched:`, nameProp, "→", nameNorm);
+        // console.log(`❌ NOT matched:`, nameProp, "→", nameNorm);
       }
 
       return isMatch;
     });
 
-    console.log("✅ Total matched features:", stateFeatures.length);
+    // console.log("✅ Total matched features:", stateFeatures.length);
 
     // 🔹 Enrich with population + status
     const enrichedFeatures = stateFeatures.map((f: any) => {
@@ -145,7 +145,7 @@ export default function DashboardHome() {
       const info = lgaLookup[key];
 
       if (!info) {
-        console.log(`⚠️ No LGA data match for:`, lgaProp, "→", key);
+        // console.log(`⚠️ No LGA data match for:`, lgaProp, "→", key);
       }
 
       return {
@@ -159,7 +159,7 @@ export default function DashboardHome() {
       };
     });
 
-    console.log("✨ Enriched features:", enrichedFeatures.length);
+    // console.log("✨ Enriched features:", enrichedFeatures.length);
 
     setMapGeo({ type: "FeatureCollection", features: enrichedFeatures });
   }, [rawTopoOrGeo, stateData, selectedState]);
@@ -282,20 +282,25 @@ export default function DashboardHome() {
             icon={<FaMapMarked size={24} color="#16a34a" />}
           />
           <DemographyCard
-            title="Health Institutions"
+            title="Health Training Institutions"
             subtitle={formatNumber(stateData?.hRH || "N/A")}
             icon={<FaMapMarked size={24} color="#16a34a" />}
           />
           <DemographyCard
-            title="LGA's"
+            title="LGAs"
             subtitle={formatNumber(stateData?.no_of_lgas || "N/A")}
             icon={<FaMapMarked size={24} color="#16a34a" />}
           />
           <DemographyCard
-            title="Partners mapping"
+            title="Health Allocation"
             subtitle={formatNumber(stateData?.partners_mapping || "N/A")}
             icon={<FaMoneyCheck size={24} color="#16a34a" />}
           />
+          {/* <DemographyCard
+            title="Partners mapping"
+            subtitle={formatNumber(stateData?.partners_mapping || "N/A")}
+            icon={<FaMoneyCheck size={24} color="#16a34a" />}
+          /> */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -305,20 +310,20 @@ export default function DashboardHome() {
             data={data}
             lines={lines}
           />
-          {/* <MapView
+          <MapView
             mapClassName={`h-96 w-full rounded-xl shadow`}
             showCard={true}
             total={stateData?.demography_LGA.length || "N/A"}
             h2r={stateData?.totalHardToReach || "N/A"}
-          /> */}
+          />
 
-          <MapView
+          {/* <MapView
             mapClassName={`h-96 w-full rounded-xl shadow`}
             showCard={true}
             geojson={mapGeo}
             total={stateData?.demography_LGA?.length}
             h2r={stateData?.total_Hard_To_Reach}
-          />
+          /> */}
         </div>
         <NominatimMap highlightQuery={selectedState} />
       </div>

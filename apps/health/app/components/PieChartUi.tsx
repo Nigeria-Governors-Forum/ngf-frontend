@@ -8,15 +8,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const COLORS = ["#2563eb", "#f97316", "#a855f7", "#E5D0FF"];//Blue,Orange, Purple, Yellow,
+const COLORS = ["#2563eb", "#f97316", "#a855f7", "#E5D0FF"]; //Blue,Orange, Purple, Yellow,
 interface DataCardProps {
   title: string;
+  secondTitle?: string;
   initialData: any;
   alternateData?: any;
 }
 
 export default function DataCard({
   title,
+  secondTitle,
   initialData,
   alternateData,
 }: DataCardProps) {
@@ -28,7 +30,9 @@ export default function DataCard({
     <div className="bg-white rounded-xl shadow-md p-4 w-auto">
       {/* Header with Toggle */}
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-semibold text-green-800">{title}</h2>
+        <h2 className="text-lg font-semibold text-green-800">
+          {enabled ? secondTitle : title}
+        </h2>
         {alternateData && (
           <label className="inline-flex items-center cursor-pointer">
             <input
@@ -47,7 +51,7 @@ export default function DataCard({
       </div>
 
       {/* Pie Chart */}
-      <div className="h-50">
+      <div className="h-60">
         <ResponsiveContainer>
           <PieChart>
             <Pie
@@ -56,7 +60,7 @@ export default function DataCard({
               nameKey="name"
               cx="50%"
               cy="50%"
-              outerRadius={60}
+              outerRadius={90}
               label
             >
               {data.map((_: any, index: number) => (
@@ -64,7 +68,6 @@ export default function DataCard({
                   key={`cell-${index}`}
                   fill={COLORS[index % COLORS.length]}
                 />
-                
               ))}
             </Pie>
             <Tooltip />
@@ -74,7 +77,7 @@ export default function DataCard({
       </div>
 
       {/* Summary Row */}
-      <div className="flex justify-around text-sm gap-4 text-gray-700">
+      {/* <div className="flex justify-around text-sm gap-4 text-gray-700">
         {data.map((item: any, idx: number) => (
           <span
             key={idx}
@@ -85,7 +88,7 @@ export default function DataCard({
             <span className="text-xs">{item.name}</span>
           </span>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

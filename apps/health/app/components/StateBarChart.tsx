@@ -105,6 +105,7 @@ const StateBarChart: React.FC<StateBarChartProps> = ({
           <YAxis
             domain={[0, Math.ceil(maxVal * 1)]}
             tickFormatter={(val) => formatCurrency(val, currencySymbol)}
+            hide
           />
           <Tooltip
             content={(props) => (

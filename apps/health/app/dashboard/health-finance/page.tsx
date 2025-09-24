@@ -97,7 +97,7 @@ const HealthFinance = () => {
             currencyDenotation="T"
           />
         </div>
-        <div className="grid grid-cols-1 gap-4 p-4">
+        <div className="grid grid-cols-4 gap-4 p-4">
           <ComparisonBarChart
             title="Health Expenditure Trend"
             data={sample}
@@ -106,6 +106,7 @@ const HealthFinance = () => {
             budgetColor="#10B981"
             className="ui:bg-white ui:rounded-2xl ui:shadow ui:p-4"
           />
+          
 
           <div className="p-4 bg-white rounded-2xl shadow">
             <LgaPerCapitaBarChart

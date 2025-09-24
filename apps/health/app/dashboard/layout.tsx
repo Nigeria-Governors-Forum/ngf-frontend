@@ -69,7 +69,7 @@ export default function DashboardLayout({
 
   useEffect(() => {
     const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
       // localStorage.getItem("token");
     if (!token) {
       router.replace("/");

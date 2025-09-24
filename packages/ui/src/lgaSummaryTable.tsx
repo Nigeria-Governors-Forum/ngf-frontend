@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-
 export type LgaStatus = "safe" | "normal" | "hard" | "unknown";
 
 export interface LgaRow {

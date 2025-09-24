@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export type StatusKey = "yes" | "no" | "blank";
+export type StatusKey = "yes" | "no";
 
 export interface StatusMappingEntry {
   label: string;
@@ -12,7 +12,6 @@ export interface StatusMappingEntry {
 export interface StatusMapping {
   yes: StatusMappingEntry;
   no: StatusMappingEntry;
-  blank: StatusMappingEntry;
 }
 
 export interface ScorecardItem {
@@ -36,7 +35,6 @@ export interface ScorecardTableProps {
 const defaultStatusMapping: StatusMapping = {
   yes: { label: "Yes", colorClass: "ui:bg-green-600" },
   no: { label: "No", colorClass: "ui:bg-red-500" },
-  blank: { label: "No Data", colorClass: "ui:bg-gray-400" },
 };
 
 interface StatusCircleProps {
@@ -48,12 +46,7 @@ const StatusCircle: React.FC<StatusCircleProps> = ({
   status,
   mapping = defaultStatusMapping,
 }) => {
-  const key: StatusKey =
-    status?.toLowerCase() === "yes"
-      ? "yes"
-      : status?.toLowerCase() === "no"
-      ? "no"
-      : "blank";
+  const key: StatusKey = status?.toLowerCase() === "yes" ? "yes" : "no";
   const { label, colorClass } = mapping[key];
 
   return (

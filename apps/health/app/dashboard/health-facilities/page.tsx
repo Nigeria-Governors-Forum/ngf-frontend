@@ -148,7 +148,8 @@ const HealthFacility: React.FC<HealthFacilityPageProps> = ({
         {/* Below: 2 cards per row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <DataCard
-            title="Health Facilities by level of care"
+            title="Health Facilities by Ownership"
+            secondTitle="Health Facilities by Level of Care"
             initialData={[
               {
                 name: "Public",

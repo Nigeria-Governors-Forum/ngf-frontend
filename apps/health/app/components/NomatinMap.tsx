@@ -2,18 +2,6 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
 import L, { LatLngExpression } from "leaflet";
 
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
-// fix marker issue
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x.src ?? markerIcon2x,
-  iconUrl: markerIcon.src ?? markerIcon,
-  shadowUrl: markerShadow.src ?? markerShadow,
-});
-
 async function geocodeNominatim(query: string) {
   // const url = `https://nominatim.openstreetmap.org/search?format=json&polygon_geojson=1&limit=1&q=${encodeURIComponent(
   //   query
@@ -50,7 +38,7 @@ const FitBounds: React.FC<{ geojson: any }> = ({ geojson }) => {
   return null;
 };
 
-interface NominatimMapProps {
+export interface NominatimMapProps {
   center?: LatLngExpression;
   geojson?: any;
   highlightQuery?: string;

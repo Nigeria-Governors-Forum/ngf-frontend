@@ -68,12 +68,12 @@ const HumanResource = () => {
         {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <DemographyCard
-            title="Total Health Worker"
+            title="Total Health Workforce"
             subtitle={formatNumber(Number(stateData?.hRH_Professions)) || "N/A"}
             icon={<FaUserNurse size={24} color="#16a34a" />}
           />
           <DemographyCard
-            title="Total Health Training Institution"
+            title="Total Health Training Institutions"
             subtitle={formatNumber(Number(stateData?.hRH)) || "N/A"}
             icon={<FaHospital size={24} color="#16a34a" />}
           />
@@ -86,7 +86,7 @@ const HumanResource = () => {
         {/* Middle Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
-            <PopulationSummaryTable title="Human Resource" data={dataTwo} />
+            <PopulationSummaryTable title="Health Workforce Breakdown" data={dataTwo} />
           </div>
           {/* Map spans 2 columns */}
           <div className="md:col-span-1">

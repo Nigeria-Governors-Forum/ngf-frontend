@@ -54,41 +54,44 @@ const DemographyPage = () => {
             subtitle={stateData?.year_created || "N/A"}
           />
           <DemographyCard
-            title="Total population"
-            subtitle={
-              formatNumber(Number(stateData?.total_population)) || "N/A"
-            }
-          />
-          <DemographyCard
             title="Land Mass"
             subtitle={formatNumber(Number(stateData?.land_mass)) || "N/A"}
-          />
-          <DemographyCard
-            title="Under 1 Popn"
-            subtitle={formatNumber(Number(stateData?.under_1)) || "N/A"}
           />
           <DemographyCard
             title="LGAs"
             subtitle={formatNumber(Number(stateData?.no_of_lgas)) || "N/A"}
           />
           <DemographyCard
-            title="Under 5 Popn"
-            subtitle={formatNumber(Number(stateData?.under_5)) || "N/A"}
-          />
-          <DemographyCard
             title="Political Wards"
             subtitle={formatNumber(Number(stateData?.political_wards)) || "N/A"}
           />
           <DemographyCard
-            title="WCBA"
-            subtitle={formatNumber(Number(stateData?.wcba)) || "N/A"}
-          />
-          <DemographyCard
-            title="Health Facility"
+            title="Health Facilities"
             subtitle={
               formatNumber(Number(stateData?.health_facilities)) || "N/A"
             }
           />
+          <DemographyCard
+            title="Total Population"
+            subtitle={
+              formatNumber(Number(stateData?.total_population)) || "N/A"
+            }
+          />
+          <DemographyCard
+            title="Under 1 Population"
+            subtitle={formatNumber(Number(stateData?.under_1)) || "N/A"}
+          />
+          <DemographyCard
+            title="Under 5 Population"
+            subtitle={formatNumber(Number(stateData?.under_5)) || "N/A"}
+          />
+
+          <DemographyCard
+            title="Women of Child Bearing Age"
+            icon={<FaMoneyCheck size={24} color="#16a34a" />}
+            subtitle={formatNumber(Number(stateData?.wcba)) || "N/A"}
+          />
+
           <DemographyCard
             title="Pregnant Women"
             subtitle={formatNumber(Number(stateData?.pregnant_women)) || "N/A"}

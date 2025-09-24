@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export type StatusKey = "yes" | "no" | "blank";
+export type StatusKey = "yes" | "no";
 
 export interface StatusMappingEntry {
   label: string;
@@ -12,11 +12,11 @@ export interface StatusMappingEntry {
 export interface StatusMapping {
   yes: StatusMappingEntry;
   no: StatusMappingEntry;
-  blank: StatusMappingEntry;
+  // blank: StatusMappingEntry;
 }
 
 export interface TableColumn {
-  key: string;  // property name in data
+  key: string; // property name in data
   label: string; // column label
   type?: "status" | "text";
 }
@@ -35,7 +35,7 @@ export interface ScorecardTableProps {
 const defaultStatusMapping: StatusMapping = {
   yes: { label: "Yes", colorClass: "ui:bg-green-600" },
   no: { label: "No", colorClass: "ui:bg-red-500" },
-  blank: { label: "No Data", colorClass: "ui:bg-black" },
+  // blank: { label: "No Data", colorClass: "ui:bg-black" },
 };
 
 interface StatusCircleProps {
@@ -47,8 +47,7 @@ const StatusCircle: React.FC<StatusCircleProps> = ({
   status,
   mapping = defaultStatusMapping,
 }) => {
-  const key: StatusKey =
-    status === "Yes" ? "yes" : status === "No" ? "no" : "blank";
+  const key: StatusKey = status === "Yes" ? "yes" : "no";
   const { label, colorClass } = mapping[key];
 
   return (
@@ -73,11 +72,10 @@ const ScorecardTable: React.FC<ScorecardTableProps> = ({
     { key: "status", label: "Status", type: "status" },
   ];
 
-
-  const finalColumns = columns || defaultSingleCols ;
+  const finalColumns = columns || defaultSingleCols;
 
   return (
-    <div className="ui:max-w-full ui:bg-white ui:rounded-2xl ui:shadow-md ui:p-4 ui:text-black ui:overflow-hidden" >
+    <div className="ui:max-w-full ui:bg-white ui:rounded-2xl ui:shadow-md ui:p-4 ui:text-black ui:overflow-hidden">
       <h2 className="ui:text-lg ui:font-bold ui:mb-4 ui:capitalize">{title}</h2>
 
       <div className="ui:overflow-x-auto">

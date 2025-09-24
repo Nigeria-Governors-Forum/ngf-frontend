@@ -79,7 +79,8 @@ const PopulationSummaryTable: React.FC<PopulationSummaryTableProps> = ({
                     {row.number}
                   </td>
                   <td
-                    className={`ui:px-4 ui:py-3 ui:text-center font-semibold ${densityColor}`}
+                    // className={`ui:px-4 ui:py-3 ui:text-center font-semibold ${densityColor}`}
+                    className={`ui:px-4 ui:py-3 ui:text-center font-semibold`}
                   >
                     {isNaN(densityVal)
                       ? "N/A"

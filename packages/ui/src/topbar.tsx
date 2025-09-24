@@ -6,7 +6,6 @@ import ConfirmPrompt from "./confirmPrompt";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 
-// import { useTopbarFilters } from "../../../apps/health/app/dashboard/hooks/TopbarFiltersContext";
 import { useTopbarFilters } from "./hooks/TopbarFiltersContext";
 
 export interface TopbarProps {
@@ -36,7 +35,7 @@ const Topbar: React.FC<TopbarProps> = ({
   onStateChange,
   onYearChange,
 }) => {
-  const [showConfirm, setShowConfirm] = useState(false);
+  // const [showConfirm, setShowConfirm] = useState(false);
   const [topBarTitle, setTopBarTitle] = useState("");
   const router = useRouter();
   const pathname = usePathname();
@@ -47,6 +46,8 @@ const Topbar: React.FC<TopbarProps> = ({
     setSelectedYear,
     setSelectedState,
     selectedZone,
+    showConfirm,
+    setShowConfirm,
   } = useTopbarFilters();
 
   useEffect(() => {
