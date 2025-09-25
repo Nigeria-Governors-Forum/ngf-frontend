@@ -5,7 +5,7 @@ import DemographyCard from "@repo/ui/demographyCard";
 import PopulationSummaryTable, {
   LgaRow,
 } from "@repo/ui/populationSummaryTable";
-import { FaHospital, FaUserNurse } from "react-icons/fa";
+import { FaHospitalUser, FaUsers } from "react-icons/fa";
 import MapView from "../../components/MapWrapper";
 import { useTopbarFilters } from "@repo/ui/hooks/TopbarFiltersContext";
 import toast from "react-hot-toast";
@@ -47,7 +47,6 @@ const HumanResource = () => {
       console.log(stats);
       setStateData(stats?.data);
 
-      toast.success(`Welcome, ${selectedState} - ${selectedYear}!`);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Invalid Credentials");
@@ -70,12 +69,12 @@ const HumanResource = () => {
           <DemographyCard
             title="Total Health Workforce"
             subtitle={formatNumber(Number(stateData?.hRH_Professions)) || "N/A"}
-            icon={<FaUserNurse size={24} color="#16a34a" />}
+            icon={<FaUsers size={24} color="#16a34a" />}
           />
           <DemographyCard
             title="Total Health Training Institutions"
             subtitle={formatNumber(Number(stateData?.hRH)) || "N/A"}
-            icon={<FaHospital size={24} color="#16a34a" />}
+            icon={<FaHospitalUser size={24} color="#16a34a" />}
           />
           <HealthCard
             title="Health Training Institutions Breakdown"

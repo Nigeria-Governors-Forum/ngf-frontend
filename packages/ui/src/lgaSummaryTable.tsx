@@ -137,7 +137,7 @@ const LgaSummaryTable: React.FC<LgaSummaryTableProps> = ({
                     </div>
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
-                    {row.lga_population}
+                    {parseFloat(Number(row.lga_population) as any).toFixed(0)}
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
                     {row.health_facilities}

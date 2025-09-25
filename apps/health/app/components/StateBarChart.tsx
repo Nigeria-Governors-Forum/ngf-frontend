@@ -29,6 +29,8 @@ interface StateBarChartProps {
   title?: string;
   currencySymbol?: string;
   className?: string;
+  xaxis?: string;
+  yaxis?: string;
 }
 
 const blueShades = [
@@ -43,7 +45,7 @@ const blueShades = [
 const formatCurrency = (value: number, symbol = "") =>
   symbol
     ? symbol + value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    : value.toFixed(1); // fallback for percentages etc.
+    : value.toFixed(0) + "%"; // fallback for percentages etc.
 
 const TooltipContent: React.FC<any> = ({
   active,

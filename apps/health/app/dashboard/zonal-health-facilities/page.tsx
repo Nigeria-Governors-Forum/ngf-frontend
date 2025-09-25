@@ -39,9 +39,16 @@ const ZonalHealthFacility = () => {
     }
   };
 
+
   useEffect(() => {
+    if (!selectedState) return;
+
     const zoneArea = getZoneByState(selectedState.toLocaleLowerCase());
     setSelectedZone(zoneArea?.zone.toLocaleLowerCase());
+  }, [selectedState]);
+
+  useEffect(() => {
+    if (!selectedZone || !selectedState || !selectedYear) return;
     fetchData();
   }, [selectedZone, selectedState, selectedYear]);
 

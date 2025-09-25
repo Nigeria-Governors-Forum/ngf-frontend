@@ -90,7 +90,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                 Public
               </th>
               <th className="ui:px-4 ui:py-3 ui:text-center ui:font-semibold">
-                <span className="ui:font-bold ui:text-2xl">Total</span>
+                Total
               </th>
             </tr>
           </thead>
@@ -98,6 +98,8 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
             {data.map((row, i) => {
               const status = row.status || "unknown";
               const style = styles[status];
+              const isLast = i === data.length - 1;
+
               return (
                 <tr
                   key={i}
@@ -105,7 +107,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                     status === "hard"
                       ? "ui:bg-red-400" // you can also emphasize full row
                       : ""
-                  }`}
+                  } ${isLast? "ui:text-xl" : ""}`} 
                 >
                   <td
                     className={`ui:px-4 ui:py-3 ui:font-medium ui:whitespace-nowrap ${style.textClass}`}
@@ -123,7 +125,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                                 : "ui:bg-gray-200"
                         }`}
                       /> */}
-                      <span>{row.name}</span>
+                      <span> {row.name}</span>
                     </div>
                   </td>
                   <td className="ui:px-4 ui:py-3 ui:text-center">
@@ -132,9 +134,8 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                   <td className="ui:px-4 ui:py-3 ui:text-center">
                     {row.public}
                   </td>
-                  {/* <td className="ui:px-4 ui:py-3 ui:text-center ui:font-bold"> */}
                   <td className="ui:px-4 ui:py-3 ui:text-center">
-                    <span></span>
+                    <span className="ui:text-2xl"></span>
                     {formatNumber(Number(row.total)) || "N/A"}
                   </td>
                 </tr>

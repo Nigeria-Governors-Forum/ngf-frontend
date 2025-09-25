@@ -29,7 +29,7 @@ export default function DataCard({
   return (
     <div className="bg-white rounded-xl shadow-md p-4 w-auto">
       {/* Header with Toggle */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-green-800">
           {enabled ? secondTitle : title}
         </h2>
@@ -51,9 +51,9 @@ export default function DataCard({
       </div>
 
       {/* Pie Chart */}
-      <div className="h-60">
+      <div className="h-60 mt-6">
         <ResponsiveContainer>
-          <PieChart>
+          <PieChart >
             <Pie
               data={data}
               dataKey="value"
@@ -61,7 +61,15 @@ export default function DataCard({
               cx="50%"
               cy="50%"
               outerRadius={90}
-              label
+              label={({ name, value }) => {
+                const total = data.reduce(
+                  (acc: number, d: any) => acc + d.value,
+                  0
+                );
+                const percent =
+                  total > 0 ? ((value / total) * 100).toFixed(0) : 0;
+                return `${value} (${percent}%)`;
+              }}
             >
               {data.map((_: any, index: number) => (
                 <Cell
@@ -70,8 +78,19 @@ export default function DataCard({
                 />
               ))}
             </Pie>
-            <Tooltip />
-            <Legend />
+            <Tooltip
+              formatter={(value: number, _name, props: any) => {
+                const total = data.reduce(
+                  (acc: number, d: any) => acc + d.value,
+                  0
+                );
+                const percent =
+                  total > 0 ? ((value / total) * 100).toFixed(0) : 0;
+                return [`${value} (${percent}%)`, props.payload.name];
+              }}
+            />
+            <Legend verticalAlign="top" height={36} />
+
           </PieChart>
         </ResponsiveContainer>
       </div>

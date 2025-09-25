@@ -44,7 +44,6 @@ const formatCurrency = (val: number, symbol = "₦") =>
 const TooltipContent: React.FC<any> = ({
   active,
   payload,
-  label,
   currencySymbol,
   suffix,
 }) => {
@@ -73,9 +72,7 @@ const HorizontalServiceProvisionBarChart: React.FC<
   showValueSuffix = "",
 }) => {
   const effectiveMax =
-    max && max > 0
-      ? max
-      : Math.max(...data.map((d) => Number(d.percentage)));
+    max && max > 0 ? max : Math.max(...data.map((d) => Number(d.percentage)));
 
   return (
     <div className={className}>
@@ -94,7 +91,7 @@ const HorizontalServiceProvisionBarChart: React.FC<
           >
             <XAxis
               type="number"
-              domain={[0, Math.ceil(effectiveMax * 0.6)]}
+              domain={[0, Math.ceil(effectiveMax * 1.1)]}
               hide
             />
             <YAxis
@@ -121,7 +118,6 @@ const HorizontalServiceProvisionBarChart: React.FC<
               isAnimationActive={false}
               maxBarSize={24}
               background={{ fill: "#f3f4f6" }}
-              // label={{ position: "right", formatter: (v: any) => `${formatCurrency(v, currencySymbol)}${showValueSuffix}` }}
             >
               {data.map((entry, idx) => {
                 const color =
@@ -134,9 +130,8 @@ const HorizontalServiceProvisionBarChart: React.FC<
                 dataKey="percentage"
                 position="right"
                 formatter={(v: any) =>
-                  `${formatCurrency(v* 100, currencySymbol)}${showValueSuffix}`
+                  `${formatCurrency(v * 100, currencySymbol)}${showValueSuffix}`
                 }
-                // formatter={(v: any) => `${v.toFixed(2)}%`}
                 style={{ fill: "#1f2d3a", fontWeight: 600, fontSize: 12 }}
               />
             </Bar>

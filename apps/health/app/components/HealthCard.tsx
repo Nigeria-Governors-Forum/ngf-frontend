@@ -72,32 +72,24 @@ const HealthCard: React.FC<SummaryTableProps> = ({
 
   return (
     <div className="max-w-full bg-white rounded-2xl shadow-md p-6 text-black">
-      <h2 className="text-lg font-bold text-green-700 mb-4">
-        {title}
-      </h2>
+      <h2 className="text-lg font-bold text-green-700 mb-4">{title}</h2>
 
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse text-sm">
           <thead>
             <tr className="bg-green-800 text-white">
-              <th className="px-4 py-3 text-left font-semibold">
-                Institution
-              </th>
-              <th className="px-4 py-3 text-center font-semibold">
-                Private
-              </th>
-              <th className="px-4 py-3 text-center font-semibold">
-                Public
-              </th>
-              <th className="px-4 py-3 text-center font-semibold">
-                Total
-              </th>
+              <th className="px-4 py-3 text-left font-semibold">Institution</th>
+              <th className="px-4 py-3 text-center font-semibold">Private</th>
+              <th className="px-4 py-3 text-center font-semibold">Public</th>
+              <th className="px-4 py-3 text-center font-semibold">Total</th>
             </tr>
           </thead>
           <tbody>
             {data.map((row, i) => {
               const status = row.status || "unknown";
               const style = styles[status];
+              const isLast = i === data.length - 1;
+
               return (
                 <tr
                   key={i}
@@ -105,7 +97,7 @@ const HealthCard: React.FC<SummaryTableProps> = ({
                     status === "hard"
                       ? "bg-red-400" // you can also emphasize full row
                       : ""
-                  }`}
+                  } ${isLast? "ui:text-xl" : ""}`}
                 >
                   <td
                     className={`px-4 py-3 font-medium whitespace-nowrap ${style.textClass}`}
@@ -126,12 +118,8 @@ const HealthCard: React.FC<SummaryTableProps> = ({
                       <span>{row.institution}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-center">
-                    {row?.private}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    {row.public}
-                  </td>
+                  <td className="px-4 py-3 text-center">{row?.private}</td>
+                  <td className="px-4 py-3 text-center">{row.public}</td>
                   <td className="px-4 py-3 text-center">
                     {formatNumber(Number(row.total)) || "N/A"}
                   </td>

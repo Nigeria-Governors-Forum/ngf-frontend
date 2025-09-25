@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import SummaryTable, { SummaryRow } from "@repo/ui/summaryTable";
-import { FaArrowRight } from "react-icons/fa";
 import MapView from "../../components/MapWrapper";
 import HorizontalServiceProvisionBarChart from "@repo/ui/serviceProvision";
 import DataCard from "../../components/PieChartUi";
@@ -109,23 +108,24 @@ const HealthFacility: React.FC<HealthFacilityPageProps> = ({
               <h2 className="text-lg font-semibold text-green-800 mb-3 text-center">
                 {title}
               </h2>
-              <div className="flex justify-around items-center text-sm text-gray-700">
+              <div className="flex flex-col justify-around items-center text-gray-700">
                 <div className="flex flex-col items-center">
-                  <span className="text-blue-600 font-medium text-base">
+                  <span className="text-blue-600 font-bold text-xl">
                     {formatNumber(Number(stateData?.health_facilities)) ||
                       "N/A"}
                   </span>
                 </div>
-                <div className="flex flex-col items-center">
+                {/* <div className="flex flex-col items-center">
                   <span className="text-green-600">
                     <FaArrowRight size={20} color="#16a34a" />
+                    <FaArrowLeft size={20} color="#16a34a" />
                   </span>
-                </div>
+                </div> */}
                 <div className="flex flex-col items-center">
-                  <span className="text-red-600 font-medium">
+                  <span className="text-red-600 font-bold">
                     {stateData?.per_person || "N/A"}
                   </span>
-                  <span className="text-xs italic">per 10,000 population</span>
+                  <span className="text-base italic text-red-600 ">per 10,000 population</span>
                 </div>
               </div>
             </div>

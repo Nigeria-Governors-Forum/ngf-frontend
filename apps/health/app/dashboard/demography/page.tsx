@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import DemographyCard from "@repo/ui/demographyCard";
-import LgaSummaryTable, { LgaLookup, LgaRow } from "@repo/ui/lgaSummaryTable";
-import { FaMoneyCheck } from "react-icons/fa";
+import LgaSummaryTable, { LgaLookup, } from "@repo/ui/lgaSummaryTable";
+import { FaChild, FaLandmark, FaRegCalendar, FaRegHospital, FaUserNurse, FaUsers, FaUsersCog } from "react-icons/fa";
 import MapView from "../../components/MapWrapper";
 import { Endpoints, httpClient } from "../../../api-client/src";
 import toast from "react-hot-toast";
@@ -52,50 +52,58 @@ const DemographyPage = () => {
           <DemographyCard
             title="Year Created"
             subtitle={stateData?.year_created || "N/A"}
+            icon={<FaRegCalendar size={24} color="#16a34a" />}
           />
           <DemographyCard
             title="Land Mass"
             subtitle={formatNumber(Number(stateData?.land_mass)) || "N/A"}
+            icon={<FaLandmark size={24} color="#16a34a" />}
           />
           <DemographyCard
             title="LGAs"
             subtitle={formatNumber(Number(stateData?.no_of_lgas)) || "N/A"}
+            icon={<FaLandmark size={24} color="#16a34a" />}
           />
           <DemographyCard
             title="Political Wards"
             subtitle={formatNumber(Number(stateData?.political_wards)) || "N/A"}
+            icon={<FaLandmark size={24} color="#16a34a" />}
           />
           <DemographyCard
             title="Health Facilities"
             subtitle={
               formatNumber(Number(stateData?.health_facilities)) || "N/A"
             }
+            icon={<FaRegHospital size={24} color="#16a34a" />}
           />
           <DemographyCard
             title="Total Population"
             subtitle={
               formatNumber(Number(stateData?.total_population)) || "N/A"
             }
+            icon={<FaUsers size={24} color="#16a34a" />}
           />
           <DemographyCard
             title="Under 1 Population"
             subtitle={formatNumber(Number(stateData?.under_1)) || "N/A"}
+            icon={<FaUsersCog size={24} color="#16a34a" />}
           />
           <DemographyCard
             title="Under 5 Population"
             subtitle={formatNumber(Number(stateData?.under_5)) || "N/A"}
+            icon={<FaUsers size={24} color="#16a34a" />}
           />
 
           <DemographyCard
             title="Women of Child Bearing Age"
-            icon={<FaMoneyCheck size={24} color="#16a34a" />}
+            icon={<FaUserNurse size={24} color="#16a34a" />}
             subtitle={formatNumber(Number(stateData?.wcba)) || "N/A"}
           />
 
           <DemographyCard
             title="Pregnant Women"
             subtitle={formatNumber(Number(stateData?.pregnant_women)) || "N/A"}
-            icon={<FaMoneyCheck size={24} color="#16a34a" />}
+            icon={<FaChild size={24} color="#16a34a" />}
           />
         </div>
 

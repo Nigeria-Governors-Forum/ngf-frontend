@@ -10,19 +10,11 @@ import toast from "react-hot-toast";
 import LoadingScreen from "@repo/ui/loadingScreen";
 import ZonalPerBarChart from "../../components/ZonalPerCapita";
 
-interface ZonalHealthFacilityPageProps {
-  state?: string;
-  title?: string;
-  total?: string | number;
-  perPerson?: string | number;
-}
-
 const ZonalHealthFinance = () => {
   const [loading, setLoading] = useState(false);
   const [stateData, setStateData] = useState<any>();
   const {
     selectedState,
-    setSelectedState,
     selectedYear,
     setSelectedZone,
     selectedZone,

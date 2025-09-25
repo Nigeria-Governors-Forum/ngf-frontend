@@ -11,6 +11,7 @@ import {
   LabelList,
   Cell,
 } from "recharts";
+import { formatNumber } from "../dashboard/page";
 
 interface StateData {
   state: string;
@@ -62,7 +63,7 @@ const ZonalPerBarChart: React.FC<StateBarChartProps> = ({
   data,
   barColor = "#2563EB",
   title,
-  currencySymbol = "",
+  currencySymbol = "₦",
   className,
 }) => {
   const maxVal =
@@ -121,7 +122,7 @@ const ZonalPerBarChart: React.FC<StateBarChartProps> = ({
               position="top"
               formatter={(label: React.ReactNode) => {
                 if (typeof label === "number") {
-                  return label.toFixed(0);
+                  return "₦" + formatNumber(Number(label.toFixed(0)));
                 }
                 if (typeof label === "string") {
                   const num = Number(label);
