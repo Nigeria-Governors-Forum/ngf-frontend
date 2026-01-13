@@ -15,7 +15,7 @@ const UploadPage = () => {
     const disconnect = connectSSE(
       `${process.env.NEXT_PUBLIC_API_URL}/user/progress/details`,
       (data) => {
-        console.log('data', data);
+        console.log("data", data);
 
         setProgress(data);
       }
@@ -65,6 +65,9 @@ const UploadPage = () => {
     }
   };
 
+  const isError = message.startsWith("❌") || message.startsWith("⚠️");
+  const isSuccess = message.startsWith("✅");
+
   return (
     <div className="flex items-center justify-center">
       <div className="bg-gray-50 rounded-2xl p-8 w-full text-gray-900">
@@ -89,7 +92,7 @@ const UploadPage = () => {
           </select>
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-sm font-medium mb-2 text-gray-700">
             Choose Excel File
           </label>
@@ -104,12 +107,41 @@ const UploadPage = () => {
               📂 Selected: {file.name}
             </p>
           )}
+        </div> */}
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2 text-gray-700">
+            Choose Excel File
+          </label>
+
+          <div className="relative border-2 border-dashed border-green-400 rounded-lg p-4 bg-white hover:bg-green-50 transition">
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={handleFileChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+
+            <div className="flex items-center justify-center gap-2 text-green-700">
+              <FaUpload className="w-5 h-5" />
+              <span className="font-medium">
+                {file ? "Change file" : "Click to select Excel file"}
+              </span>
+            </div>
+          </div>
+
+          {file && (
+            <p className="text-sm text-gray-600 mt-2">
+              📂 Selected: <span className="font-medium">{file.name}</span>
+            </p>
+          )}
         </div>
 
         <button
           onClick={handleUpload}
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition disabled:opacity-50"
+          disabled={loading || !file}
+          className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition
+             disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {loading ? (
             <>
@@ -124,16 +156,43 @@ const UploadPage = () => {
           )}
         </button>
 
-        {message && (
-          <pre className="mt-6 p-4 bg-gray-100 rounded-lg text-sm text-gray-800 whitespace-pre-wrap overflow-x-auto">
-            {message}
+        {/* {message && (
+          <pre className="mt-6 p-4 bg-gray-100 rounded-lg text-sm text-gray-800 whitespace-pre-wrap min-h-[64px]">
+            {message} ola
           </pre>
-        )}
+        )} */}
+        {/* <div className="mt-6 min-h-[64px]">
+          {message && (
+            <div
+              className={`p-3 rounded-lg text-sm transition
+        ${
+          isError
+            ? "bg-red-50 text-red-700 border border-red-200"
+            : isSuccess
+              ? "bg-green-50 text-green-700 border border-green-200"
+              : "bg-blue-50 text-blue-700 border border-blue-200"
+        }
+      `}
+            >
+              {message}
+            </div>
+          )}
+        </div> */}
         {progress ? (
           <pre>{JSON.stringify(progress, null, 2)}</pre>
         ) : (
           <p>Waiting for updates...</p>
         )}
+
+        <div className="mt-4 min-h-[48px] text-sm text-gray-600">
+          {progress ? (
+            <p>
+              Processing: <strong>{progress.step}</strong> ({progress.percent}%)
+            </p>
+          ) : (
+            <p className="italic">Waiting for updates…</p>
+          )}
+        </div>
       </div>
     </div>
   );
